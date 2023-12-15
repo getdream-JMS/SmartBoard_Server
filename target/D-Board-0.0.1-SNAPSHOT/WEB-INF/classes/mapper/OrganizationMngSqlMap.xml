@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="organMng">
+	<resultMap id="organUserInfoMap" type="userInfoVO">
+	   <result property="userId" column="userId"/>
+	   <result property="userPass" column="userPass"/>
+	   <result property="userName" column="userName"/>
+	   <result property="email" column="email"/>	   
+	   <result property="telNum" column="telNum"/>
+	   <result property="userInfo" column="userInfo"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="organId" column="organId"/>
+	   <result property="organName" column="organName"/>
+	   <result property="photoPath" column="photoPath"/>
+	   <result property="isRegUser" column="isRegUser"/>	   	   
+	   <collection property="roles" column="userId" ofType= "java.lang.String" select="userMng.selectUserRoleInfo"></collection>
+	</resultMap>
+	<select id="selectOrganInfoList" parameterType="organInfoVO" resultType="organInfoResultVO">
+		WITH RECURSIVE  CTE AS (
+		    SELECT 
+				ORGAN_ID AS organId,
+				PARENT_ID AS parentId,
+				NAME AS name,
+				1 AS depth,
+				SEQ AS seq
+			FROM TB_ORGANIZATION 
+			WHERE PARENT_ID = '0'
+			UNION ALL
+			SELECT
+				A.ORGAN_ID AS organId,
+				A.PARENT_ID AS parentId,
+				A.NAME AS name,
+				depth + 1 AS depth,
+				A.SEQ AS seq
+			FROM TB_ORGANIZATION A
+				INNER JOIN CTE B ON A.PARENT_ID = B.organId 
+		)
+		SELECT parentId, organId,name,depth, seq  
+		,IFNULL(B.count, 0) AS count
+        FROM CTE AS A
+        LEFT JOIN (SELECT COUNT(ORGAN_ID) AS count,ORGAN_ID FROM TB_DEPARTMENT_MEMBER GROUP BY ORGAN_ID) B
+        ON A.organId = B.ORGAN_ID 
+        ORDER BY A.parentId, A.seq 
+	</select>	
+	<select id="selectTotalOrganInfoList" parameterType="organInfoVO" resultType="java.lang.Integer">
+		WITH RECURSIVE CTE AS (
+		    SELECT 
+				ORGAN_ID AS organId,
+				PARENT_ID AS parentId,
+				NAME AS name,
+				1 AS depth,
+				SEQ AS seq
+			FROM TB_ORGANIZATION 
+			WHERE PARENT_ID = '0'
+			UNION ALL
+			SELECT
+				A.ORGAN_ID AS organId,
+				A.PARENT_ID AS parentId,
+				A.NAME AS name,
+				depth + 1 AS depth,
+				A.SEQ AS seq
+			FROM TB_ORGANIZATION A
+				INNER JOIN CTE B ON A.PARENT_ID = B.organId 
+		)
+		SELECT COUNT( organId )  FROM CTE
+	</select>
+	
+	<select id="selectOfficeInfoList" parameterType="organInfoVO" resultType="organInfoResultVO">
+		WITH RECURSIVE  CTE AS (
+		    SELECT 
+				ORGAN_ID AS organId,
+				PARENT_ID AS parentId,
+				NAME AS name,
+				1 AS depth,
+				SEQ AS seq
+			FROM TB_ORGANIZATION 
+			WHERE PARENT_ID = '0'
+			UNION ALL
+			SELECT
+				A.ORGAN_ID AS organId,
+				A.PARENT_ID AS parentId,
+				A.NAME AS name,
+				depth + 1 AS depth,
+				A.SEQ AS seqNum
+			FROM TB_ORGANIZATION A
+				INNER JOIN CTE B ON A.PARENT_ID = B.organId 
+		)
+		SELECT parentId, organId,name,depth, seq
+		,IFNULL(B.count, 0) AS count
+        FROM CTE AS A
+        LEFT JOIN (SELECT COUNT(ORGAN_ID) AS count,ORGAN_ID FROM TB_CLIENTS GROUP BY ORGAN_ID) B
+        ON A.organId = B.ORGAN_ID 
+		WHERE A.depth <![CDATA[ < ]]> 3 ORDER BY A.parentId, A.seq
+		
+	</select>
+	
+	<select id="selectTotalOfficeInfoList" parameterType="organInfoVO" resultType="java.lang.Integer">
+		WITH RECURSIVE  CTE AS (
+		    SELECT 
+				ORGAN_ID AS organId,
+				PARENT_ID AS parentId,
+				NAME AS name,
+				1 AS depth,
+				SEQ AS seq
+			FROM TB_ORGANIZATION 
+			WHERE PARENT_ID = '0'
+			UNION ALL
+			SELECT
+				A.ORGAN_ID AS organId,
+				A.PARENT_ID AS parentId,
+				A.NAME AS name,
+				depth + 1 AS depth,
+				A.SEQ AS seq
+			FROM TB_ORGANIZATION A
+				INNER JOIN CTE B ON A.PARENT_ID = B.organId 
+		)
+		SELECT COUNT( organId )  FROM CTE WHERE depth <![CDATA[ < ]]> 3
+		
+	</select>
+	
+	<delete id="deleteOrganInfo" parameterType="organInfoVO">
+			DELETE FROM TB_ORGANIZATION
+			WHERE ORGAN_ID = #{organId}
+	</delete>
+	
+	<select id="selectUsersByOrgan" parameterType="userInfoSearchVO" resultMap="organUserInfoMap">
+		SELECT 
+			B.USER_ID AS userId,
+		    B.USER_PASS AS userPass,
+		    B.USER_NAME AS userName,
+		    B.EMAIL AS email,
+		    B.TEL_NUM AS telNum,
+		    B.CREATE_DATE  AS createDate,
+		    B.ORGAN_ID AS organId,
+		    B.POSITION AS position,
+		    B.DUTY AS duty,
+		    A.NAME AS organName,
+		    B.PHOTO_PATH AS photoPath,
+		    IF ( ISNULL( C.USER_ID), 'N', 'Y' ) AS isRegUser
+		FROM TB_ORGANIZATION A
+		LEFT JOIN TB_DEPARTMENT_MEMBER B
+		ON A.ORGAN_ID = B.ORGAN_ID 
+		LEFT JOIN TB_USER_MST C
+		ON B.USER_ID = C.USER_ID
+		WHERE 1 = 1 
+		<if test="organId != null  and  !organId.equals('')">
+		AND A.ORGAN_ID = #{organId}
+		</if>
+		<if test="userName != null  and  !userName.equals('')">
+		AND B.USER_NAME LIKE CONCAT('%',#{userName},'%')
+		</if>
+		<if test="startRowNum != null  and  !startRowNum.equals('') and  pageCount > 0">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>	
+	
+	<select id="selectTotalOrganUserInfoCount"  resultType="java.lang.Integer">
+		SELECT 
+			COUNT( USER_ID ) AS totalCount
+		FROM TB_DEPARTMENT_MEMBER
+		WHERE 1 = 1 
+		<if test="organId != null  and  !organId.equals('')">
+		AND ORGAN_ID = #{organId}
+		</if>
+		<if test="userName != null  and  !userName.equals('')">
+		AND USER_NAME LIKE CONCAT('%',#{userName},'%')
+		</if>
+	</select>
+	
+	<select id="selectUserOfficeList"  parameterType="userInfoVo" resultType="java.util.HashMap">
+		SELECT A.ORGAN_ID AS organId, B.NAME AS name
+		FROM TB_USER_ORGAN A
+		LEFT JOIN TB_ORGANIZATION B
+		ON A.ORGAN_ID = B.ORGAN_ID
+		WHERE A.USER_ID = #{userId}
+		ORDER BY A.ORGAN_ID
+	</select>
+	<select id="selectAllClientList"  parameterType="userInfoVo" resultType="java.util.HashMap">
+		SELECT 
+			A.CLIENT_ID clientId,			
+			A.CLIENT_NAME AS clientName
+		FROM TB_CLIENTS A
+		<if test="roleType != null  and  !roleType.equalsIgnoreCase('S')">	
+		INNER JOIN (SELECT DISTINCT CLIENT_ID FROM TB_USER_CLIENT		
+			WHERE USER_ID = #{userId}		
+			) B
+			ON A.CLIENT_ID = B.CLIENT_ID
+		</if>
+		WHERE A.USE_YN = 'Y'
+		ORDER BY A.CLIENT_NAME ASC
+	</select>
+	
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="configCodeMng">
+	<select id="selectResolutionList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			RESOLUTION_ID AS resolutionId,
+			LAYOUT_TYPE AS layoutType,
+		    WIDTH AS width,
+		    HEIGHT AS height,
+		    INFO AS info
+		FROM TB_RESOLUTION
+		WHERE LAYOUT_TYPE = #{layoutType}
+		AND USE_YN = 'Y'
+	</select>	
+	
+	<select id="selectDboardConfig" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			CONFIG_VALUE AS configValue
+		FROM TB_DBOARD_CONFIG
+		WHERE USE_YN = 'Y' AND CONFIG_TYPE = #{configType}
+	</select>
+	
+	<select id="selectTouchTimeoutConfig" parameterType="commonCodeVO" resultType="java.util.HashMap">
+		 SELECT
+			GROUP_CONCAT( IF(CODE_NAME = 'TEMPLATE_HOME',CODE_INFO,null)) AS templateHome, 
+		 	GROUP_CONCAT( IF(CODE_NAME = 'TOUCH_TIMEOUT',CODE_INFO,null)) AS touchTimeout
+			 FROM TB_CODE WHERE CODE_GRP = #{codeGrp}  GROUP BY CODE_GRP
+	</select>
+</mapper>

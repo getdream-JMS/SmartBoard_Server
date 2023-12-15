@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="authUser">
+	<resultMap id="userInfoMap" type="userInfoVO">
+	   <result property="userId" column="userId"/>
+	   <result property="userPass" column="userPass"/>
+	   <result property="department" column="department"/>
+	   <result property="userName" column="userName"/>
+	   <result property="email" column="email"/>	   
+	   <result property="telNum" column="telNum"/>
+	   <result property="userInfo" column="userInfo"/>
+	   <result property="activeYn" column="activeYn"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="organId" column="organId"/>
+	   <result property="organName" column="organName"/>
+	   <result property="photoPath" column="photoPath"/>
+	   <collection property="roles" column="userId" ofType= "java.lang.String" select="userMng.selectUserRoleInfo"></collection>
+	   <collection property="clients" column="userId" ofType= "java.lang.String" select="userMng.selectUserClientInfo"></collection>
+	</resultMap>
+	
+	<select id="selectUserAuthInfo" parameterType="userInfoVO" resultMap="userInfoMap">
+	SELECT 
+		USER_ID AS userId,
+	    USER_PASS AS userPass,
+	    DEPARTMENT AS department,
+	    USER_NAME AS userName,
+	    EMAIL AS email,
+	    TEL_NUM AS telNum,
+	    USER_INFO AS userInfo,
+	    ACTIVE_YN AS activeYn,
+	    CREATE_DATE  AS createDate,
+	    ORGAN_ID AS organId,
+	    PHOTO_PATH AS photoPath
+	FROM TB_USER_MST
+	WHERE USER_ID = BINARY(#{userId}) 
+	LIMIT 1
+	</select>	
+
+</mapper>

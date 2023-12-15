@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="logMng">
+	<select id="selectLogDashboard" parameterType="logInfoVO" resultType="logInfoResultVO">
+		SELECT 
+			A.LOG_ID AS logId,
+			A.CLIENT_ID AS clientId,
+			A.ORGAN_ID AS organId,
+		    A.LOG_CODE AS logCode,
+		    A.LOG_INFO AS logInfo,
+		    (SELECT NAME FROM TB_ORGANIZATION WHERE ORGAN_ID = A.ORGAN_ID) AS organName,
+		    B.CLIENT_NAME AS clientName,
+		    CASE
+			    WHEN A.LOG_TYPE= 'ERR' THEN 'ERROR'	
+			    WHEN A.LOG_TYPE= 'INFO' THEN 'INFO'			  
+			    ELSE 'INFO'
+			END AS logType,
+		    A.CREATE_DATE AS createDate,
+		    A.END_DATE AS endDate
+		FROM TB_LOG_INFO A
+		LEFT JOIN TB_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID
+		WHERE A.LOG_ID IS NOT NULL
+		<if test="logType != null  and  !logType.equals('')">
+		AND A.LOG_TYPE = #{logType}
+		</if>
+		<!-- AND A.LOG_STATUS = #{logStatus} -->
+		ORDER BY A.CREATE_DATE DESC
+		LIMIT #{rowNumber}
+	</select>	
+	
+	<insert id="saveLogInfo" parameterType="logInfoVO">
+		INSERT INTO TB_LOG_INFO
+		(
+			CLIENT_ID,
+			ORGAN_ID,
+			LOG_CODE,
+			LOG_INFO,
+			LOG_TYPE,
+			USER_ID,
+			USER_IP
+		)
+		VALUES (
+				#{clientId},
+				#{organId},
+				#{logCode},
+				#{logInfo},
+				#{logType},
+				#{userId},
+				#{userIp}
+		)
+	</insert>
+	<delete id="deleteLogInfo" parameterType="java.util.List">
+		DELETE FROM TB_LOG_INFO WHERE
+		<foreach item="item" index="index" collection="list" open="LOG_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<select id="selectLogInfoList" parameterType="logInfoVO" resultType="logInfoResultVO">
+		SELECT A.* FROM (
+			SELECT 
+				A.LOG_ID AS logId,
+				A.CLIENT_ID AS clientId,
+				A.ORGAN_ID AS organId,
+			    A.LOG_CODE AS logCode,
+			    A.LOG_INFO AS logInfo,
+			    (SELECT NAME FROM TB_ORGANIZATION WHERE ORGAN_ID = A.ORGAN_ID) AS organName,
+			    B.CLIENT_NAME AS clientName,
+			    A.LOG_TYPE AS logType,
+			    A.CREATE_DATE AS createDate,
+			    A.END_DATE AS endDate,
+			    USER_IP
+			FROM TB_LOG_INFO A
+			LEFT JOIN TB_CLIENTS B			
+			ON A.CLIENT_ID = B.CLIENT_ID 
+			WHERE 1=1
+			<if test="logType != null  and  !logType.equals('')">
+				AND A.LOG_TYPE = #{logType}
+			</if>
+			<if test="startDate != null  and  !startDate.equals('')">
+				AND DATE_FORMAT(A.CREATE_DATE,'%Y%m%d') <![CDATA[ >= ]]> #{startDate}
+			</if>
+			<if test="endDate != null  and  !endDate.equals('')">
+			 	AND DATE_FORMAT(A.CREATE_DATE,'%Y%m%d') <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="logInfo != null  and  !logInfo.equals('')">
+				AND A.LOG_INFO LIKE CONCAT('%',#{logInfo},'%')
+			</if>	
+		) A
+		<if test="sortingCol != null  and  !sortingCol.equals('')">
+		ORDER BY CONCAT('A.',${sortingCol}) ${sortingType}
+		</if>
+		<if test="sortingCol == null  or  sortingCol.equals('')">
+		ORDER BY A.createDate DESC
+		</if>
+		<if test="startRowNum != null  and  !startRowNum.equals('')">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>	
+	
+	<select id="selectTotalLogInfoList" parameterType="logInfoVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(LOG_ID) AS totalCount 
+		FROM TB_LOG_INFO
+		WHERE 1=1
+			<if test="logType != null  and  !logType.equals('')">
+				AND LOG_TYPE = #{logType}
+			</if>
+			<if test="startDate != null  and  !startDate.equals('')">
+				AND DATE_FORMAT(CREATE_DATE,'%Y%m%d') <![CDATA[ >= ]]> #{startDate}
+				<!-- AND CREATE_DATE <![CDATA[ >= ]]> STR_TO_DATE(CONCAT('20191128','000000'),'%Y%m%d%h%i%s') -->
+			</if>
+			<if test="endDate != null  and  !endDate.equals('')">
+			 	AND DATE_FORMAT(CREATE_DATE,'%Y%m%d') <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="logInfo != null  and  !logInfo.equals('')">
+				AND LOG_INFO LIKE CONCAT('%',#{logInfo},'%')
+			</if>	
+	
+	</select>
+	
+	<insert id="saveLoginLogInfo" parameterType="loginLogInfoVO">
+		INSERT INTO TB_LOGIN_LOG
+		(
+			USER_ID,
+			USER_NAME,
+			STATUS,
+			LOGIN_RESULT,
+			USER_IP,
+			SESSION_ID
+		)
+		VALUES (
+				#{userId},
+				#{userName},
+				#{status},
+				#{loginResult},
+				#{userIp},
+				#{sessionId}
+		)
+	</insert>
+	<delete id="deleteLoginLogInfoList" parameterType="java.util.List">
+		DELETE FROM TB_LOGIN_LOG WHERE
+		<foreach item="item" index="index" collection="list" open="LOG_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<select id="selectLoginLogInfoList" parameterType="loginLogInfoVO" resultType="loginLogInfoVO">
+		SELECT A.* FROM (
+			SELECT 
+				LOG_ID AS logId,
+				USER_ID AS userId,
+				USER_NAME AS userName,
+				STATUS AS status,
+				LOGOUT_TIME AS logoutTime,
+			    LOGIN_RESULT AS loginResult,
+			    USER_IP AS userIp,
+			    CREATE_DATE AS createDate
+			FROM TB_LOGIN_LOG 					
+			WHERE 1=1
+			<if test="userId != null  and  !userId.equals('') and !roleType.equalsIgnoreCase('S')">
+				AND USER_ID = #{userId}
+			</if>			
+			<if test="status != null  and  !status.equals('')">
+				AND STATUS = #{status}
+			</if>
+			<if test="userIp != null  and  !userIp.equals('')">
+				AND USER_IP = #{userIp}
+			</if>
+			<if test="startDate != null  and  !startDate.equals('')">
+				AND DATE_FORMAT(CREATE_DATE,'%Y%m%d') <![CDATA[ >= ]]> #{startDate}
+			</if>
+			<if test="endDate != null  and  !endDate.equals('')">
+			 	AND DATE_FORMAT(CREATE_DATE,'%Y%m%d') <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="loginResult != null  and  !loginResult.equals('')">
+				AND LOGIN_RESULT LIKE CONCAT('%',#{loginResult},'%')
+			</if>	
+		) A
+		<if test="sortingCol != null  and  !sortingCol.equals('')">
+		ORDER BY CONCAT(${sortingCol}) ${sortingType}
+		</if>
+		<if test="sortingCol == null  or  sortingCol.equals('')">
+		ORDER BY A.createDate DESC
+		</if>
+		<if test="startRowNum != null  and  !startRowNum.equals('')">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>	
+	
+	<select id="selectTotalLoginLogInfoList" parameterType="loginLogInfoVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(LOG_ID) AS totalCount 
+		FROM TB_LOGIN_LOG
+		WHERE 1=1
+			<if test="userId != null  and  !userId.equals('') and !roleType.equalsIgnoreCase('S')">
+				AND USER_ID = #{userId}
+			</if>
+			<if test="userName != null  and  !userName.equals('')">
+				AND USER_NAME = #{userName}
+			</if>
+			<if test="status != null  and  !status.equals('')">
+				AND STATUS = #{status}
+			</if>
+			<if test="userIp != null  and  !userIp.equals('')">
+				AND USER_IP = #{userIp}
+			</if>
+			<if test="startDate != null  and  !startDate.equals('')">
+				AND DATE_FORMAT(CREATE_DATE,'%Y%m%d') <![CDATA[ >= ]]> #{startDate}
+			</if>
+			<if test="endDate != null  and  !endDate.equals('')">
+			 	AND DATE_FORMAT(CREATE_DATE,'%Y%m%d') <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="loginResult != null  and  !loginResult.equals('')">
+				AND LOGIN_RESULT LIKE CONCAT('%',#{loginResult},'%')
+			</if>	
+	
+	</select>
+	
+	<update id="updateLoginLogInfo" parameterType="loginLogInfoVO">
+		UPDATE TB_LOGIN_LOG
+		SET
+		    LOGOUT_TIME = NOW(),
+		    STATUS = 0,
+		    LOGIN_RESULT = #{loginResult}
+		WHERE USER_ID = #{userId} AND USER_IP = #{userIp} 
+	</update>
+	
+	<select id="selectLoginLogInfo" parameterType="loginLogInfoVO" resultType="loginLogInfoVO">
+		SELECT 
+			LOG_ID AS logId,
+			USER_ID AS userId,
+			USER_NAME AS userName,
+			STATUS AS status,
+			LOGOUT_TIME AS logoutTime,
+		    LOGIN_RESULT AS loginResult,
+		    USER_IP AS userIp,
+		    CREATE_DATE AS createDate
+		FROM TB_LOGIN_LOG
+		WHERE USER_ID = #{userId}
+				AND USER_IP = #{userIp}
+				AND STATUS = 1
+		ORDER BY CREATE_DATE DESC
+		LIMIT 1
+	</select>
+	
+	<insert id="saveLogoutLogInfo" parameterType="loginLogInfoVO">
+		INSERT INTO TB_LOGIN_LOG
+		(
+			USER_ID,
+			USER_NAME,
+			STATUS,
+			LOGIN_RESULT,
+			USER_IP,
+			SESSION_ID
+		)
+		SELECT  
+			USER_ID,
+			USER_NAME,
+			#{status},
+			#{loginResult},
+			USER_IP,
+			#{sessionId}
+		FROM TB_LOGIN_LOG
+		WHERE STATUS = 1 AND SESSION_ID = #{sessionId}
+	</insert>
+	
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nowonMng">	
+	<select id="selectNowonDept" resultType="java.util.HashMap">
+		SELECT 
+			NAME AS name,
+		    ID AS id,
+		    PARENT_ID AS parentId,
+		    SEQ AS seq
+		FROM outter_dept
+	</select>	
+	<select id="selectNowonUser" resultType="java.util.HashMap">
+		SELECT 
+			NAME AS name,
+		    COMPANY AS company,
+		    USERID AS userId,
+		    EMAIL AS email,
+		    PASSWORD AS password,
+		    MOBILEPHONE AS mobilePhone,
+		    PHONE AS phone,
+		    DUTY AS duty,
+		    DEPT_ID AS deptId,
+		    PHOTO_DIR AS photoDir,
+		    SEQ AS seq,
+		    APP_NO AS appNo,
+		    DISPLAY AS display
+		FROM outter_user
+	</select>	
+	
+	<delete id="deleteNowonDept">
+		DELETE FROM TB_ORGANIZATION
+	</delete>
+	
+	<delete id="deleteNownUserInfo">
+		DELETE FROM TB_DEPARTMENT_MEMBER
+	</delete>
+	
+	<insert id="insertNowonDeptInfo" parameterType="java.util.List">
+		INSERT INTO TB_ORGANIZATION (
+			ORGAN_ID,
+			PARENT_ID,
+			NAME,
+			SEQ,
+			USE_YN
+		) VALUES
+		<foreach collection="list" item="element" index="index" open="(" separator="),("  close=")">
+			#{element.id},
+			<if test="element.parentId.equals('Root')">
+			'0',
+			</if>
+			<if test="!element.parentId.equals('Root')">
+			#{element.parentId},
+			</if>
+			#{element.name},
+			#{element.seq},
+			'Y'			
+		</foreach>
+	</insert>
+	
+	<insert id="insertNowonUserInfo" parameterType="java.util.List">
+		INSERT INTO TB_DEPARTMENT_MEMBER (
+			USER_ID, 
+			USER_PASS, 
+			USER_NAME, 
+			ORGAN_ID,
+			COMPANY, 
+			EMAIL, 
+			TEL_NUM, 
+			PHONE, 
+			POSITION, 
+			DUTY, 
+			PHOTO_PATH, 
+			SEQ, 
+			APP_NO, 
+			DISPLAY 
+		) VALUES
+		<foreach collection="list" item="element" index="index" open="(" separator="),("  close=")">
+			#{element.userId},
+			#{element.password},
+			#{element.name},
+			#{element.deptId},
+			#{element.company},
+			#{element.email},
+			#{element.phone},
+			#{element.mobilePhone},
+			#{element.position},
+			#{element.duty},
+			#{element.photoDir},
+			#{element.seq},
+			#{element.appNo},
+			#{element.display}
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,166 @@
+@font-face {
+    font-family: 'NanumGothic';
+    src: url('/fonts/NanumGothic.eot');
+    src: url('/fonts/NanumGothic.eot') format('embedded-opentype'),
+    url('/fonts/NanumGothic.woff') format('woff');
+}
+
+img[src$=".gif"], img[src$=".png"], img[src$=".jpg"] { image-rendering: -moz-crisp-edges;
+/* Firefox */
+image-rendering: -o-crisp-edges;
+/* Opera */
+image-rendering: -webkit-optimize-contrast;
+/* Webkit (non-standard naming) */
+image-rendering: crisp-edges; -ms-interpolation-mode: nearest-neighbor;
+/* IE (non-standard property) */
+}
+
+
+.app-header .nav-item .nav-link {
+    font-size : 1.2em;
+}
+
+body {
+    background-color: #1c2125;
+   /* font-family: 'NanumGothic';*/
+}
+
+/* scrollbar style 1 */
+/* ::-webkit-scrollbar{width: 8px;}
+::-webkit-scrollbar-track {background-color:#b3b3cc;}
+::-webkit-scrollbar-thumb {background-color:#666699;border-radius: 5px;}
+::-webkit-scrollbar-thumb:hover {background: #8585ad;}
+::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+width:8px;height:8px;background:#b3b3cc;} */
+
+/* scrollbar style 2 */
+::-webkit-scrollbar{
+  width: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+::-webkit-scrollbar-track {
+  background-color: #454e57;
+  border-right: 1px solid #2f353a;
+  border-left: 1px solid #2f353a;
+}
+::-webkit-scrollbar-thumb {
+  background-color:#23282c;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {background: #71818e;}
+::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+width:8px;height:8px;background:#171a1c;}
+
+
+
+.footer-addr {
+    font-size: 0.8rem;
+    color: gray;
+    word-spacing: 2px;
+}
+
+.page-link {
+    border-radius: 15px;
+    padding: 0.3rem 0.6rem;
+}
+
+.badge {
+    border: 1px solid #20a8d8;
+}
+
+a.page-link {
+    margin-right: 0.4em;
+}
+
+.sidebar .nav-link {
+    color: gray;
+}
+
+.btn-light {
+    color: #FFFFFF;
+    background-color: initial;
+    border-color: lightgray;
+}
+.btn-add {
+    border-radius: 15px;
+    padding: 0.15rem 0.6rem;
+    background-color:blue;
+    border-color: blue;
+}
+
+.btn-delete {
+    border-radius: 15px;
+    padding: 0.15rem 0.6rem;
+}
+
+.navbar-nav .open > .nav-link, .navbar-nav .open > .nav-link:hover, .navbar-nav .open > .nav-link:focus,
+.navbar-nav .active > .nav-link,
+.navbar-nav .active > .nav-link:hover,
+.navbar-nav .active > .nav-link:focus,
+.navbar-nav .nav-link.open,
+.navbar-nav .nav-link.open:hover,
+.navbar-nav .nav-link.open:focus,
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.active:hover,
+.navbar-nav .nav-link.active:focus {
+  color:  #40d051;
+  //#e4e7ea;
+}
+
+.sidebar .nav-link.active {
+    color: #40d051;
+    //#fff !important;
+    background: #3a4248;
+}
+
+.carousel-indicators li {
+    background-color:#20a8d8;
+}
+
+.card-header>i {
+    margin-right: .5rem;
+}
+#carouselContentIndicators{
+	height: 100%;
+}
+
+#carouselContentIndicators div{
+	height: inherit;
+}
+
+#carouselContentIndicators img{
+	margin-left: auto;
+    margin-right: auto;
+    height: 100% !important;
+}
+
+/*DashBoard*/
+.c-callout {
+    position: relative;
+    padding: 0 1rem;
+    margin: 1rem 0;
+    border-radius: .25rem;
+    border-left: 4px solid #d8dbe0;
+}
+.c-callout-info {
+    border-left-color: #4799eb;
+}
+
+.c-callout-danger {
+    border-left-color: #d16767;
+}
+.c-callout-warning {
+    border-left-color: #e1a82d;
+}
+.c-callout-success {
+    border-left-color: #45a164;
+}
+body {
+	overflow : auto;
+	min-width : 1400px;
+}
+
+.main .container-fluid {
+	min-width:1400px;
+}

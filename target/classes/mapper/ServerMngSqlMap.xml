@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="serverMng">
+	<select id="selectServerList" parameterType="serverInfoVO" resultType="serverInfoVO">
+		SELECT 
+			SERVER_ID AS serverId,
+			SERVER_NAME AS serverName,
+			SERVER_IP AS serverIp,
+			SERVER_PORT AS serverPort,
+			SERVER_TYPE AS serverType,
+			USE_YN	AS useYn
+		FROM TB_SVR_MST
+		WHERE 1=1
+		<if test="serverType != null  and  !serverType.equals('')">
+			AND SERVER_TYPE = #{serverType}
+		</if>
+		<if test="useYn != null  and  !useYn.equals('')">
+			AND USE_YN = #{useYn}
+		</if>
+		ORDER BY SERVER_NAME ASC
+	</select>	
+	
+	<select id="selectServerId" parameterType="java.util.HashMap" resultType="serverInfoVO">
+		SELECT 
+			SERVER_ID AS serverId,
+			SERVER_NAME AS serverName,
+			SERVER_IP AS serverIp,
+			SERVER_PORT AS serverPort,
+			SERVER_TYPE AS serverType,
+			USE_YN	AS useYn
+		FROM TB_SVR_MST
+		WHERE SERVER_IP = #{serverIp}
+			AND SERVER_PORT = #{serverPort}
+		LIMIT 1
+	</select>
+	<select id="selectServerIdByName" parameterType="java.util.HashMap" resultType="serverInfoVO">
+		SELECT 
+			SERVER_ID AS serverId,
+			SERVER_NAME AS serverName,
+			SERVER_IP AS serverIp,
+			SERVER_PORT AS serverPort,
+			SERVER_TYPE AS serverType,
+			USE_YN	AS useYn
+		FROM TB_SVR_MST
+		WHERE SERVER_NAME = #{serverId}			
+		LIMIT 1
+	</select>
+	<insert id="insertServerStatus" parameterType="serverStatusVO">
+		INSERT INTO TB_SVR_STATUS
+		(
+			SERVER_ID,
+			SERVICE_STATUS
+		)
+		VALUES (
+				#{serverId},
+				#{serviceStatus}
+		)
+	</insert>
+	
+	<update id="updateServerStatus" parameterType="serverStatusVO">
+			UPDATE TB_SVR_STATUS
+			SET
+				SERVICE_STATUS = #{serviceStatus},
+				CREATE_DATE = NOW()
+			WHERE 
+				SERVER_ID = #{serverId}
+	</update>
+	
+	<select id="selectServerIpList" parameterType="serverInfoVO" resultType="serverInfoVO">
+		SELECT 
+			SERVER_IP AS serverIp
+		FROM TB_SVR_MST
+		WHERE 1=1
+		<if test="serverType != null  and  !serverType.equals('')">
+			AND SERVER_TYPE = #{serverType}
+		</if>
+		<if test="useYn != null  and  !useYn.equals('')">
+			AND USE_YN = #{useYn}
+		</if>
+		GROUP BY SERVER_IP
+		ORDER BY SERVER_IP ASC
+	</select>
+	
+	<select id="selectServerSnmpInfo" resultType="serverSnmpVO">
+		SELECT SERVER_IP AS serverIp,
+		    CPU_USE_RTO AS cpuUseRto,
+		    MMRY_USE_RTO AS mmryUseRto,
+		    DISK_USE_RTO AS diskUseRto,
+		    STST_NET AS netStatus,
+		    CREATE_DATE AS createDate
+		FROM TB_SVR_MNTR_INFO
+		WHERE SERVER_IP = #{value}
+	</select>
+	
+	 <!-- 서버 System 상태 insert -->         
+    <insert id="insertSvrMntrInfo" parameterType="java.util.HashMap">
+		INSERT INTO TB_SVR_MNTR_INFO (
+			SERVER_IP
+			, CPU_USE_RTO
+			, MMRY_USE_RTO
+			, DISK_USE_RTO
+			, STST_NET
+			, CREATE_DATE
+		) VALUES (
+			#{serverIp}
+			, #{cpuUseRto}
+			, #{mmryUseRto}
+			, #{diskUseRto}
+			, #{ststNet}
+			, NOW()
+		)
+    </insert>
+
+	<!-- 서버 System 상태 update --> 
+    <update id="updateSvrMntrInfo" parameterType="java.util.HashMap">
+		UPDATE TB_SVR_MNTR_INFO
+		   SET CPU_USE_RTO = #{cpuUseRto}
+			 , MMRY_USE_RTO = #{mmryUseRto}
+			 , DISK_USE_RTO = #{diskUseRto}
+			 , STST_NET = #{ststNet}
+			 , CREATE_DATE = NOW()
+		 WHERE SERVER_IP = #{serverIp} 
+    </update>
+    
+    <!-- 서버 System Disk 사용 정보 조회 -->
+    <select id="selectSvrDiskUseInfo" parameterType="java.util.HashMap" resultType="serverDiskInfoVO">
+    	SELECT SERVER_IP AS "serverIp"
+			, PTTN_NM AS "pttnNm"
+			, PTTN_USE_RTO AS "pttnUseRto"
+			, CREATE_DATE AS "createDate"
+    	  FROM TB_SVR_DISK_USE_INFO
+		 WHERE SERVER_IP = #{serverIp}
+		   AND PTTN_NM = #{pttnNm}
+    </select>
+
+    <!-- 서버 System Disk 사용 정보 Insert -->      
+    <insert id="insertSvrDiskUseInfo" parameterType="java.util.HashMap">
+		INSERT INTO TB_SVR_DISK_USE_INFO (
+			SERVER_IP
+			, PTTN_NM
+			, PTTN_USE_RTO
+			, CREATE_DATE
+		) VALUES (
+			#{serverIp}
+			, #{pttnNm}
+			, #{pttnUseRto}
+			, NOW()
+		)
+    </insert>
+
+	<!-- 서버 System Disk 사용 정보 Update -->  
+    <update id="updateSvrDiskUseInfo" parameterType="java.util.HashMap">
+		UPDATE TB_SVR_DISK_USE_INFO 
+		   SET PTTN_USE_RTO = #{pttnUseRto}
+			 , CREATE_DATE = NOW()
+		 WHERE SERVER_IP = #{serverIp}
+		   AND PTTN_NM = #{pttnNm}
+    </update>
+
+	<!-- 서버 System Disk 사용 정보 Delete --> 
+    <delete id="deleteSvrDiskUseInfo" parameterType="java.lang.String">
+		DELETE FROM TB_SVR_DISK_USE_INFO 
+	     WHERE SERVER_IP = #{value}
+	       AND TIMESTAMPDIFF(SECOND, CREATE_DATE,  NOW() ) > 60
+    </delete>	
+    
+    <select id="selectServerListByIp" parameterType="java.lang.String" resultType="serverInfoVO">
+		SELECT 
+			SERVER_ID AS serverId,
+			SERVER_NAME AS serverName,
+			SERVER_IP AS serverIp,
+			SERVER_PORT AS serverPort,
+			SERVER_TYPE AS serverType,
+			USE_YN	AS useYn
+		FROM TB_SVR_MST
+		WHERE SERVER_IP = #{value}
+		ORDER BY SERVER_NAME ASC
+	</select>
+</mapper>

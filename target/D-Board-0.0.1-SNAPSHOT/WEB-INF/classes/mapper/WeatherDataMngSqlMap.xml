@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="weatherMng">	
+	<insert id="insertWeatherData" parameterType="weatherInfoVO">
+		INSERT INTO TB_WEATHER_INFO (
+			BASE_DATE,
+			BASE_TIME,
+			PTY,
+			PCP,
+			REH,
+			SNO,
+			SKY,
+			TMP,
+			TMN,
+			TMX,
+			UUU,
+			VVV,
+			WAV,
+			VEC,
+			WSD,
+			FCST_TIME			
+		) VALUES
+		(
+			#{baseDate},
+			#{baseTime},
+			#{pty},
+			#{pcp},
+			#{reh},
+			#{sno},
+			#{sky},
+			#{tmp},
+			#{tmn},
+			#{tmx},
+			#{uuu},
+			#{vvv},
+			#{wav},
+			#{vec},
+			#{wsd},
+			#{fcstTime}
+
+		)
+	</insert>	
+	
+	<delete id="deleteWeatherData">
+			DELETE FROM TB_WEATHER_INFO
+	</delete>
+	<select id="selectClientWeatherInfo" resultType="weatherInfoVO">
+		 SELECT 
+			BASE_DATE AS baseDate,
+			BASE_TIME AS baseTime,
+			PTY AS pty,
+			PCP AS pcp,
+			REH AS reh,
+			SNO AS sno,
+			SKY AS sky,
+			TMP AS tmp,
+			TMN AS tmn,
+			TMX AS tmx,
+			UUU AS uuu,
+			VVV AS vvv,
+			WAV AS wav,
+			VEC AS vec,
+			WSD AS wsd,
+			FCST_TIME AS fcstTime 
+		FROM TB_WEATHER_INFO 
+		ORDER BY BASE_DATE DESC, FCST_TIME DESC
+		LIMIT 1
+	</select>	
+</mapper>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="reserveBoard">	
+	<select id="selectReserveBoardList" parameterType="reserveRoomInfoVO" resultType="reserveRoomInfoVO">
+		SELECT * FROM (
+			SELECT 
+				
+			    A.RESERVE_ID AS reserveId,
+			    A.TITLE AS title,
+			    A.PLACE AS place,
+			    A.ORGANIZER AS organizer,
+			    A.RESERVE_INFO AS reserveInfo,
+			    A.START_TIME AS startTime,
+			    A.END_TIME AS endTime,
+			    A.FILE_PATH AS filePath,
+				A.FILE_NAME AS fileName,
+				A.CONTENT_TYPE AS contentType,
+				A.ORIGIN_FILE_NAME AS originFileName,
+			    A.CREATE_DATE AS createDate,
+			    B.ROOM_ID AS roomId,
+			    B.ROOM_NAME AS roomName,
+			    B.ROOM_INFO AS roomInfo,
+			    B.ROOM_NUMBER AS roomNumber,
+			    B.USE_YN AS useYn,
+			    TIMESTAMPDIFF(MINUTE, DATE_FORMAT(NOW(),'%Y%m%d%H%i%s'),end_time) AS remainTime 
+			    
+			FROM TB_RESERVE_INFO A
+			LEFT JOIN TB_RESERVE_ROOM B
+			ON A.ROOM_ID = B.ROOM_ID 
+			<!-- WHERE A.CLIENT_ID == #{clientId} -->
+			
+		) A
+		<if test="sortingCol != null  and  !sortingCol.equals('')">
+		ORDER BY CONCAT('A.',${sortingCol}) ${sortingType}
+		</if>
+		<if test="sortingCol == null  or  sortingCol.equals('')">
+		ORDER BY A.createDate DESC
+		</if>
+		<if test="startRowNum != null  and  !startRowNum.equals('') and pageCount > 0">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>
+	
+	<select id="selectReserveRoomList" resultType="java.util.HashMap">
+		SELECT 
+		    ROOM_ID AS roomId,
+		    ROOM_NAME AS roomName,
+		    ROOM_INFO AS roomInfo,
+		    ROOM_NUMBER AS roomNumber,
+		    USE_YN AS useYn		    
+		FROM TB_RESERVE_ROOM
+		WHERE USE_YN = 'Y'
+		ORDER BY ROOM_NAME ASC 
+	</select>		
+	
+	<select id="selectTotalReserveBoardList"  resultType="java.lang.Integer">
+		SELECT 
+			COUNT( RESERVE_ID ) AS totalCount
+		FROM TB_RESERVE_INFO
+	</select>
+	
+	<select id="selectReserveBoardInfo" parameterType="java.lang.Integer" resultType="reserveRoomInfoVO">
+		SELECT 
+			A.RESERVE_ID AS reserveId,
+			A.TITLE AS title,
+			A.PLACE AS place,
+			A.ORGANIZER AS organizer,
+			A.RESERVE_INFO AS reserveInfo,
+			A.START_TIME AS startTime,
+			A.END_TIME AS endTime,
+			A.CREATE_DATE AS createDate,
+			A.FILE_PATH AS filePath,
+			A.FILE_NAME AS fileName,
+			A.CONTENT_TYPE AS contentType,
+			A.ORIGIN_FILE_NAME AS originFileName,
+			B.ROOM_ID AS roomId,
+			B.ROOM_NAME AS roomName,
+			B.ROOM_INFO AS roomInfo,
+			B.ROOM_NUMBER AS roomNumber,
+			B.USE_YN AS useYn
+		FROM TB_RESERVE_INFO A
+		LEFT JOIN TB_RESERVE_ROOM B
+		ON A.ROOM_ID = B.ROOM_ID 
+		WHERE A.RESERVE_ID = #{value}
+		LIMIT 1
+	</select>		
+	<insert id="saveReserveBoardInfo" parameterType="reserveRoomInfoVO" useGeneratedKeys="true"
+				    keyProperty="reserveId">
+		INSERT INTO TB_RESERVE_INFO(
+			ROOM_ID,
+			TITLE,
+			PLACE,
+			ORGANIZER,
+			RESERVE_INFO,
+			START_TIME,
+			END_TIME,
+			CONTENT_TYPE,
+			USER_ID 
+		) VALUES (
+			#{roomId},
+			#{title},
+			#{place},
+			#{organizer},
+			#{reserveInfo},
+			#{startTime},
+			#{endTime},
+			#{contentType},
+			#{userId}
+		)
+
+	</insert>
+	
+	<update id="updateReserveBoardInfo" parameterType="reserveRoomInfoVO">
+		UPDATE TB_RESERVE_INFO
+		SET
+			ROOM_ID = #{roomId},
+			TITLE = #{title},
+		    PLACE = #{place},
+		    ORGANIZER = #{organizer},
+		    RESERVE_INFO = #{reserveInfo},
+		    FILE_PATH = #{filePath},
+		    FILE_NAME = #{fileName},
+		    ORIGIN_FILE_NAME = #{originFileName},
+		    START_TIME = #{startTime},
+		    END_TIME = #{endTime},
+		    CONTENT_TYPE = #{contentType},
+		    USER_ID = #{userId}
+		WHERE RESERVE_ID = #{reserveId}
+	</update>
+	
+	<delete id="deleteReserveBoardList" parameterType="java.util.List">
+			DELETE FROM TB_RESERVE_INFO WHERE
+			<foreach item="item" index="index" collection="list" open="RESERVE_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	<select id="selectReserveBoardListById" parameterType="java.util.List" resultType="reserveRoomInfoVO">
+		SELECT 
+			RESERVE_ID AS reserveId,
+			TITLE AS title,
+			PLACE AS place,
+			ORGANIZER AS organizer,
+			RESERVE_INFO AS reserveInfo,
+			START_TIME AS startTime,
+			END_TIME AS endTime,
+			CREATE_DATE AS createDate,
+			END_TIME AS endTime,
+			FILE_PATH AS filePath,
+			FILE_NAME AS fileName,
+			ORIGIN_FILE_NAME AS originFileName
+		FROM TB_RESERVE_INFO WHERE
+		<foreach item="item" index="index" collection="list" open="RESERVE_ID IN (" close=")" separator="," >
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="checkDupReserveBoardInfo" parameterType="reserveRoomInfoVO" resultType="java.lang.Integer">
+		SELECT COUNT(RESERVE_ID)
+		FROM TB_RESERVE_INFO 
+		WHERE ROOM_ID = #{roomId}
+		AND START_TIME <![CDATA[ < ]]> #{endTime} AND END_TIME <![CDATA[ > ]]> #{startTime}
+		<if test="reserveId != null  and  !reserveId.equals('')">
+		AND RESERVE_ID != #{reserveId}
+		</if>
+	</select>
+</mapper>

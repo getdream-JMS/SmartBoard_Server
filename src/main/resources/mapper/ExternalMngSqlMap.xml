@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nowonMng_new">	
+	<select id="selectNowonDept" resultType="organInfo2VO">
+		SELECT 
+			DEPT_ID AS deptId,
+			DEPT_NAME AS deptName,
+			DEPT_FULLNAME AS deptFullname,
+			UPPER_DEPT_ID AS parentId,
+			DEPT_ORDER AS orderSeq,
+			DEPT_TEL AS deptTel
+		FROM ssov_dept
+		WHERE UPPER_DEPT_ID IS NOT NULL
+
+	</select>	
+	<select id="selectNowonUser" resultType="userInfoVO">
+		SELECT 
+			USER_NAME AS userName,
+		    USER_ID AS userId,
+		    DEPT_ID AS organId,
+		    ORG_NAME AS company,
+		    TEL AS telNum,
+		    MOBILE AS phone,
+		    POSITION_NAME AS position,
+		    DUTY_NAME AS duty,
+		    BIRTH_YMD AS birthDt,
+		    USE_YN AS display
+		FROM ssov_user
+		WHERE USER_STAT IN ('AAA','ABA')
+	</select>	
+	
+	<delete id="deleteNowonDept">
+		DELETE FROM TB_ORGANIZATION
+	</delete>
+	
+	<delete id="deleteNownUserInfo">
+		DELETE FROM TB_DEPARTMENT_MEMBER
+	</delete>
+	
+	<insert id="insertNowonDeptInfo" parameterType="java.util.List">
+		INSERT INTO TB_ORGANIZATION (
+			ORGAN_ID,
+			PARENT_ID,
+			NAME,
+			TEL_NUM,
+			SEQ,
+			USE_YN
+		) VALUES
+		<foreach collection="list" item="element" index="index" open="(" separator="),("  close=")">
+			#{element.deptId},
+			<if test="element.parentId.equals('61100000000')">
+			'0',
+			</if>
+			<if test="!element.parentId.equals('61100000000')">
+			#{element.parentId},
+			</if>
+			#{element.deptName},
+			#{element.telNum},
+			#{element.orderSeq},
+			'Y'			
+		</foreach>
+	</insert>
+	
+	<insert id="insertNowonUserInfo" parameterType="java.util.List">
+		INSERT INTO TB_DEPARTMENT_MEMBER (
+			USER_ID, 
+			USER_PASS, 
+			USER_NAME, 
+			ORGAN_ID,
+			COMPANY,
+			EMAIL, 
+			TEL_NUM, 
+			PHONE, 
+			POSITION, 
+			DUTY, 
+			SEQ, 
+			DISPLAY,
+			BIRTH_DT
+		) VALUES
+		<foreach collection="list" item="element" index="index" open="(" separator="),("  close=")">
+			#{element.userId},
+			MD5(#{element.userId}),
+			#{element.userName},
+			#{element.organId},
+			#{element.company},
+			#{element.email},
+			#{element.telNum},
+			#{element.phone},
+			#{element.position},
+			#{element.duty},
+			#{element.seq},
+			#{element.display},
+			#{element.birthDt}
+		</foreach>
+	</insert>
+</mapper>

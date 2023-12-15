@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="failOverMng">
+	
+	<resultMap id="failoverWorkInfoMap" type="java.util.HashMap">		
+	    <result property="id" column="TRANSACTION_ID"/>
+	    <result property="filename" column="FILENAME"/>
+	    <result property="sourcePath" column="SOURCE_PATH"/>
+	    <result property="thumbnailYn" column="THUMBNAIL_YN"/>
+	    <result property="transcodeYn" column="TRANSCODE_YN"/>
+	    <collection property="transcodes" column="TRANSACTION_ID" javaType="java.util.ArrayList" ofType="java.lang.String" select="selectReqPresetCodeInfo"/>
+	</resultMap>
+	
+	<select id="selectVodWorkCount" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			DIST_COUNT AS "distCount",
+			SERVER_ID AS "serverId"
+		FROM TB_TR_SVR_MAP
+		WHERE TRANSACTION_ID = #{transactionId}
+	</select>
+	
+	<select id="selectRedistVodServer" parameterType="java.util.HashMap" resultType="serverInfoVO">
+		SELECT 
+			A.SERVER_ID AS "serverId", 
+			A.SERVER_IP AS "serverIp", 
+			A.SERVER_PORT AS "serverPort", 
+			COUNT(E.TRANSACTION_ID) AS "workCount"
+		FROM TB_SVR_MST A
+		LEFT JOIN TB_TR_SVR_MAP B
+		ON A.SERVER_ID = B.SERVER_ID 
+		INNER JOIN TB_SVR_STATUS C
+		ON B.SERVER_ID = C.SERVER_ID AND  C.SERVICE_STATUS = 1
+		INNER JOIN TB_SVR_MNTR_INFO D
+		ON A.SERVER_IP = D.SERVER_IP AND STST_NET IN(1,-2) <!--  AND D.SERVER_IP != (SELECT SERVER_IP FROM TB_SVR_MST WHERE SERVER_ID = #{serverId}) -->
+		LEFT JOIN TB_TR_WORK_TRANSCODE E
+		ON B.TRANSACTION_ID = E.TRANSACTION_ID AND E.STATUS IN (1,2)
+		WHERE A.SERVER_TYPE= 'VOD'
+		<!--  AND A.SERVER_ID != 4  --> 
+		GROUP BY B.SERVER_ID
+		ORDER BY workCount ASC
+		LIMIT 1
+	</select>
+	
+	<update id="updateTrServerMapInfo" parameterType="java.util.HashMap">
+			UPDATE 	TB_TR_SVR_MAP
+			SET
+				SERVER_ID = #{serverId},
+				DIST_COUNT = DIST_COUNT+1
+			WHERE 
+				TRANSACTION_ID = #{transactionId}
+		</update>
+		
+		<update id="updateTransVodThumbStatus" parameterType="java.util.HashMap">
+			UPDATE TB_TR_WORK_THUMBNAIL
+			SET
+				STATUS = #{status}
+			WHERE 
+				TRANSACTION_ID = #{transactionId}
+		</update>
+		<update id="updateTransCodeStatus" parameterType="java.util.HashMap">
+			UPDATE 	TB_TR_WORK_TRANSCODE
+			SET
+				STATUS = #{status}
+			WHERE 
+				TRANSACTION_ID = #{transactionId}
+		</update>
+	<select id="selectReqTranscoderWorkInfo" parameterType="java.util.HashMap" resultMap="failoverWorkInfoMap">
+		SELECT 
+			TRANSACTION_ID,
+			FILENAME,
+			SOURCE_PATH,
+			THUMBNAIL_YN,
+			TRANSCODE_YN
+		FROM TB_TR_WORK_VOD
+		WHERE TRANSACTION_ID = #{transactionId}
+	</select>
+	
+	<select id="selectReqPresetCodeInfo" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT 
+			PRESET_CODE
+		FROM TB_TR_WORK_TRANSCODE
+		WHERE TRANSACTION_ID = #{transactionId}
+	</select>
+	
+	<select id="selectServerTransMapInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			DISTINCT A.TRANSACTION_ID AS transactionId
+		FROM TB_TR_SVR_MAP A
+		LEFT JOIN TB_TR_WORK_VOD B
+		ON A.TRANSACTION_ID = B.TRANSACTION_ID
+        INNER JOIN TB_TR_WORK_TRANSCODE C
+        ON B.TRANSACTION_ID = C.TRANSACTION_ID  AND C.STATUS IN (1,2)
+		WHERE A.SERVER_ID = #{serverId}
+	</select>
+		
+</mapper>

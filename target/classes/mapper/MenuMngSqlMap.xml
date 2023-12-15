@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="menuMng">
+	<resultMap id="menuListMap" type="menuInfoVo">		
+	    <result property="menuId" column="menuId"/>
+	    <result property="menuCode" column="menuCode"/>
+	    <result property="menuName" column="menuName"/>
+	    <collection property="subMenu" column="menuId" ofType="java.lang.String" select="selectSubMenuList"/>
+	</resultMap>
+	<resultMap id="subMenuListMap" type="java.util.HashMap">		
+	    <result property="menuId" column="menuId"/>
+	    <result property="menuCode" column="menuCode"/>
+	    <result property="menuName" column="menuName"/>
+	</resultMap>
+	
+	<select id="selectMenuList" parameterType="userInfoVO" resultMap="menuListMap">
+		SELECT 
+		DISTINCT 
+			A.MENU_ID AS menuId,
+			A.MENU_PID AS menuPid,
+			A.MENU_CODE AS menuCode, 
+			A.MENU_NAME AS menuName,
+			A.MENU_DEPTH AS menuDepth,
+			A.MENU_ORDER AS menuOrder
+		FROM TB_MENU_MST A
+		INNER JOIN TB_MENU_ROLE B
+		ON A.MENU_ID = B.MENU_ID
+		<if test="userId != null  and  !userId.equals('')">
+		AND B.ROLE_ID IN (SELECT ROLE_ID FROM TB_USER_ROLE WHERE USER_ID = #{userId})
+		</if>
+		AND A.USE_YN = 'Y'
+		ORDER BY A.MENU_ORDER ASC
+	</select>	
+	
+	<select id="selectSubMenuList" parameterType="java.lang.Integer" resultMap="subMenuListMap">
+		SELECT 		 
+			MENU_ID AS menuId,
+			MENU_CODE AS menuCode, 
+			MENU_NAME AS menuName
+		FROM TB_MENU_MST 
+		WHERE MENU_PID = #{menuId}
+			AND USE_YN = 'Y'
+		ORDER BY MENU_ORDER ASC
+	</select>
+	
+	<select id="selectClientMenuInfo" parameterType="clientsInfoVO" resultType="java.util.HashMap">
+		SELECT A.MENU_ID AS menuId, 
+			B.MENU_NAME AS menuName, 
+			B.MENU_IMAGE AS menuImage, 
+			B.MENU_PATH AS menuPath
+		FROM TB_MENU_CLIENT AS A 
+		INNER JOIN TB_TEMP_MENU AS B
+		ON A.MENU_ID = B.MENU_ID  AND B.USE_YN = 'Y'
+		WHERE A.CLIENT_ID = #{clientId} AND A.USE_YN = 'Y'
+		order by A.ORDER ASC
+	</select>
+	
+	<select id="selectExternalMenuPage" parameterType="clientBoardDataReqVO" resultType="java.util.HashMap">
+		SELECT LINK_URL AS linkUrl 
+		FROM TB_MENU_CLIENT AS A
+		INNER JOIN TB_EXTERNAL_LINK AS B 
+		ON A.MENU_ID = B.MENU_ID AND A.CLIENT_ID = #{clientId} AND A.ORDER = #{boardIndex}
+		LIMIT 1
+	</select>
+	
+	
+</mapper>

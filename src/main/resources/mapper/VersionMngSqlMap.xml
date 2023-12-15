@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="versionMng">
+
+	<resultMap id="clientVersionInfoMap" type="java.util.HashMap">
+		<result property="pageVersion" column="PAGE_VERSION"/>
+		<result property="resourceVersion" column="RESOURCE_VERSION"/>
+		<result property="patchPage" column="patchPage"/>
+		<result property="patchResource" column="patchResource"/>
+		<collection  property="ftp"  column="{ clientId = clientId, ftpType = ftpType}" ofType= "java.util.HashMap"  javaType="ftpServerInfoVO" select="monitorMng.selectClientMntrFtpInfo"/>
+	</resultMap>
+
+	<select id="selectVersionInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT
+			PAGE_VERSION AS pageVersion,
+			PV_UPDATE AS pvUpdate,
+			RESOURCE_VERSION AS resourceVersion,
+			RV_UPDATE AS rvUpdate
+		FROM TB_VERSION
+		<if test="id != null  and  !id.equals('')">
+			ID = #{id}
+		</if>
+	</select>
+
+	<select id="selectClientVersionInfo" parameterType="java.util.HashMap" resultMap="clientVersionInfoMap">
+		SELECT
+			PAGE_VERSION,
+			RESOURCE_VERSION,
+			#{ftpType} AS ftpType,
+			#{clientId} AS clientId,
+			CONCAT('page_',PAGE_VERSION,'.zip') AS patchPage,
+			CONCAT('resource_',RESOURCE_VERSION,'.zip') AS patchResource
+		FROM TB_VERSION
+	</select>
+
+
+	<update id="updateVersionInfo" parameterType="java.util.HashMap" >
+		UPDATE TB_VERSION
+		SET
+		<if test="pageVersion != null  and  !pageVersion.equals('')">
+			PAGE_VERSION = #{pageVersion},
+			PV_UPDATE = NOW()
+		</if>
+		<if test="resourceVersion != null  and  !resourceVersion.equals('')">
+			RESOURCE_VERSION = #{resourceVersion},
+			RV_UPDATE = NOW()
+		</if>
+	</update>
+</mapper>

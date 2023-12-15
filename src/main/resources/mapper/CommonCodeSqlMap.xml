@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="commonCode">
+	<select id="selectCommonCodeInfoByName" parameterType="commonCodeVO" resultType="commonCodeVO">
+		SELECT 
+			ID AS id,
+			CODE_GRP AS codeGrp,
+			CODE_NAME AS codeName,
+			CODE AS code,
+			CODE_INFO AS codeInfo
+		FROM TB_CODE
+		WHERE CODE_NAME = #{codeName}
+	</select>	
+	
+	<select id="selectCommonCodeInfoByCode" parameterType="commonCodeVO" resultType="commonCodeVO">
+		SELECT 
+			ID AS id,
+			CODE_GRP AS codeGrp,
+			CODE_NAME AS codeName,
+			CODE AS code,
+			CODE_INFO AS codeInfo
+		FROM TB_CODE
+		WHERE CODE_GRP = #{codeGrp}
+		AND CODE = #{code}
+	</select>
+
+	<select id="selectCommonCodeInfoListByCode" parameterType="commonCodeVO" resultType="commonCodeVO">
+		SELECT
+			ID AS id,
+			CODE_GRP AS codeGrp,
+			CODE_NAME AS codeName,
+			CODE AS code,
+			CODE_INFO AS codeInfo
+		FROM TB_CODE
+		WHERE CODE_GRP = #{codeGrp}
+	</select>
+</mapper>

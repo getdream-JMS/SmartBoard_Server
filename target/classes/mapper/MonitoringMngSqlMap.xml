@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="monitorMng">
+	<resultMap id="clientMntrConfMap" type="monitoringInfoVO">
+	   <id property="clientId" column="CLIENT_ID"/>
+	   <result property="monitorType" column="MONITOR_TYPE"/>
+	   <result property="monitorAction" column="MONITOR_ACTION"/>
+	   <result property="interval" column="MONITOR_INTERVAL"/>
+	   <collection  property="ftpInfo"  column="{ clientId = clientId, ftpType = ftpType}" ofType= "java.util.HashMap" select="selectClientMntrFtpInfo"/>
+	</resultMap>
+	
+	<resultMap id="clientMntrInfoMap" type="monitoringResInfoVO">
+	   <result property="clientId" column="CLIENT_ID"/>
+	   <result property="clientName" column="CLIENT_NAME"/>
+	   <result property="monitorType" column="MONITOR_TYPE"/>
+	   <result property="monitorAction" column="MONITOR_ACTION"/>
+	    <result property="interval" column="MONITOR_INTERVAL"/>
+	    <result property="smartFrame" column="SMART_FRAME"/>
+	    <result property="layoutType" column="LAYOUT_TYPE"/>
+	   <collection property="monitor" column="CLIENT_ID" ofType= "java.lang.String" select="selectClientMntrInfo"></collection>
+	</resultMap>
+		
+	<insert id="insertClientStatus" parameterType="java.util.HashMap" >
+		INSERT INTO TB_CLIENT_MNTR (
+			CLIENT_ID,
+			CPU,
+			DISK,
+			MEMORY,
+			STATUS,
+			UPDATE_DATE
+		) VALUES (
+			#{clientId},
+			#{cpu},
+			#{disk},
+			#{mem},
+			#{status},
+			NOW()	
+		)
+
+	</insert>	
+	
+	<update id="updateClientStatus" parameterType="java.util.HashMap">
+		UPDATE TB_CLIENT_MNTR SET 
+			UPDATE_DATE = NOW()
+			<if test="cpu != null  and  !cpu.equals('')">
+			,CPU = #{cpu}
+			</if>
+			<if test="disk != null  and  !disk.equals('')">
+			,DISK = #{disk}
+			</if>
+			<if test="mem != null  and  !mem.equals('')">
+			,MEMORY = #{mem}
+			</if>
+			<if test="status != null  and  !status.equals('')">
+			,STATUS = #{status}
+			</if>
+			
+		WHERE CLIENT_ID = #{clientId}
+	</update>
+	
+	<update id="updateClientErrorStatus">
+		UPDATE TB_CLIENT_MNTR 
+		SET 
+			STATUS = -1,
+			CPU = 0,
+			DISK = 0,
+			MEMORY = 0
+		WHERE NOW() > DATE_ADD(UPDATE_DATE, INTERVAL 40 second) 
+	</update>
+	
+	
+	<select id="selectClientMonitoringType" parameterType="monitoringReqInfoVO" resultType="java.lang.String">
+			SELECT DISTINCT B.MONITOR_TYPE AS monitorType
+			FROM TB_CLIENT_MNTR_BOARD A
+			INNER JOIN  TB_CLIENT_MNTR_CONF B
+			ON A.CLIENT_ID = B.CLIENT_ID
+			WHERE A.CLIENT_ID = #{clientId}
+	</select>
+	
+	<insert id="insertClientMonitoring1" parameterType="java.util.List" >
+		INSERT INTO TB_CLIENT_MNTR_BOARD (
+			CLIENT_ID,
+			BOARD_INDEX,
+			FILE_NAME,
+			STATUS,
+			CREATE_DATE
+		) VALUES 
+		<foreach collection="list" item="item" index="index" open="(" separator="),("  close=")">
+			#{item.clientId},
+			#{item.boardIndex},
+			#{item.fileName},
+			#{item.status},
+			NOW()
+		</foreach>
+	</insert>	
+	
+	<insert id="insertClientMonitoring" parameterType="java.util.HashMap" >
+		INSERT INTO TB_CLIENT_MNTR_BOARD (
+			CLIENT_ID,
+			BOARD_INDEX,
+			FILE_NAME,
+			STATUS,
+			CREATE_DATE
+		) VALUES (		
+			#{clientId},
+			#{boardIndex},
+			#{fileName},
+			#{status},
+			NOW()	
+		)	
+	</insert>
+	
+	<update id="updateClientMonitoring1" parameterType="java.util.HashMap">
+		<foreach collection="list" item="item"  index="index"  separator=";" >
+		UPDATE TB_CLIENT_MNTR_BOARD SET 
+			CREATE_DATE = NOW()
+			<if test="item.fileName != null  and  !item.fileName.equals('')">
+			,FILE_NAME = #{item.fileName}
+			</if>
+			<if test="item.status != null  and  !item.status.equals('')">
+			,STATUS = #{item.status}
+			</if>			
+		WHERE CLIENT_ID = #{item.clientId} AND BOARD_INDEX = #{item.boardIndex}
+		</foreach>
+	</update>
+	
+	<update id="updateClientMonitoring" parameterType="java.util.HashMap">		
+		UPDATE TB_CLIENT_MNTR_BOARD SET 
+			CREATE_DATE = NOW()
+			<if test="fileName != null  and  !fileName.equals('')">
+			,FILE_NAME = #{fileName}
+			</if>
+			<if test="status != null  and  !status.equals('')">
+			,STATUS = #{status}
+			</if>			
+		WHERE CLIENT_ID = #{clientId} AND BOARD_INDEX = #{boardIndex}		
+	</update>
+	
+	<delete id="deleteClientMonitoring" parameterType="monitoringReqInfoVO">
+			DELETE FROM TB_CLIENT_MNTR_BOARD
+			WHERE CLIENT_ID = #{clientId}
+	</delete>
+	<delete id="deleteClientMonitoringList" parameterType="java.util.List">
+			DELETE FROM TB_CLIENT_MNTR_BOARD WHERE
+			<foreach item="item" index="index" collection="list" open="CLIENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	
+	<select id="selectClientMonitoringConf" parameterType="monitoringInfoVO"  resultMap="clientMntrConfMap">
+			SELECT 
+				CLIENT_ID,
+				MONITOR_TYPE,
+				MONITOR_ACTION,
+				MONITOR_INTERVAL
+			FROM TB_CLIENT_MNTR_CONF			
+			WHERE CLIENT_ID = #{clientId}
+	</select>
+	
+	<delete id="deleteClientMonitoringConf" parameterType="java.util.List">
+			DELETE FROM TB_CLIENT_MNTR_CONF WHERE
+			<foreach item="item" index="index" collection="list" open="CLIENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<insert id="insertClientMonitoringConf" parameterType="monitoringInfoVO" >
+		INSERT INTO TB_CLIENT_MNTR_CONF (
+			CLIENT_ID,
+			MONITOR_TYPE,
+			MONITOR_ACTION,
+			MONITOR_INTERVAL,
+			CREATE_DATE
+		) VALUES (
+			#{clientId},
+			#{monitorType},
+			#{monitorAction},
+			#{interval},
+			NOW()
+		)
+	</insert>	
+	
+	<update id="updateClientMonitoringConfList" parameterType="monitoringInfoVO">
+		<foreach collection="list" item="item"  index="index"  separator=";" >
+		UPDATE TB_CLIENT_MNTR_CONF SET 
+			CREATE_DATE = NOW()
+			<if test="item.monitorType != null  and  !item.monitorType.equals('')">
+			,MONITOR_TYPE = #{item.monitorType}
+			</if>
+			<if test="item.monitorAction != null  and  !item.monitorAction.equals('')">
+			,MONITOR_ACTION = #{item.monitorAction}
+			</if>
+			<if test="item.interval != null  and  !item.interval.equals('')">
+			,MONITOR_INTERVAL = #{item.interval}
+			</if>		
+		WHERE CLIENT_ID = #{clientId}
+		</foreach>
+	</update>
+	<update id="updateClientMonitoringConf" parameterType="monitoringInfoVO">
+		UPDATE TB_CLIENT_MNTR_CONF SET 
+			CREATE_DATE = NOW()
+			<if test="monitorType != null  and  !monitorType.equals('')">
+			,MONITOR_TYPE = #{monitorType}
+			</if>
+			<if test="monitorAction != null  and  !monitorAction.equals('')">
+			,MONITOR_ACTION = #{monitorAction}
+			</if>
+			<if test="interval != null  and  !interval.equals('')">
+			,MONITOR_INTERVAL = #{interval}
+			</if>		
+		WHERE CLIENT_ID = #{clientId}
+	</update>
+	<select id="selectClientMntrFtpInfo" parameterType="java.util.HashMap" resultType="ftpServerInfoVO" >
+			SELECT 
+				FTP_IP AS ipaddr,
+				FTP_PORT AS port,
+				FTP_ID AS id,
+				FTP_PASS AS pwd,
+				FTP_PATH AS path
+			FROM TB_CLIENT_FTP
+			WHERE CLIENT_ID = #{clientId}
+			  	AND FTP_TYPE = #{ftpType}
+				AND USE_YN = 'Y'
+			LIMIT 1
+	</select>
+	
+	<select id="selectClientMonitoring" parameterType="java.lang.Integer" resultMap="clientMntrInfoMap" >
+			SELECT 
+				A.CLIENT_ID,
+				A.CLIENT_NAME,
+				A.SMART_FRAME,
+				A.LAYOUT_TYPE,
+				B.MONITOR_TYPE,
+				B.MONITOR_ACTION,
+				B.MONITOR_INTERVAL
+			FROM TB_CLIENTS A
+			INNER JOIN TB_CLIENT_MNTR_CONF B
+			ON A.CLIENT_ID = B.CLIENT_ID
+			WHERE A.CLIENT_ID = #{value}
+			ORDER BY A.CLIENT_ID DESC
+	</select>
+	
+	<select id="selectClientMntrInfo" parameterType="java.lang.Integer" resultType="java.util.HashMap" >
+			SELECT 
+				BOARD_INDEX AS boardIndex,
+				FILE_NAME AS fileName,
+				STATUS AS status,
+				CREATE_DATE AS createDate
+			FROM TB_CLIENT_MNTR_BOARD		
+			WHERE CLIENT_ID = #{clientId}
+			ORDER BY BOARD_INDEX ASC
+	</select>
+	
+</mapper>

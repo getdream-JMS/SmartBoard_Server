@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>D-Board</display-name>
+  <session-config>
+  <!-- Disables URL-based sessions (no more 'jsessionid' in the URL using Tomcat) -->
+  <session-timeout>60</session-timeout>
+  <tracking-mode>COOKIE</tracking-mode>
+  </session-config>
+  <!-- SSO begin 
+
+	<servlet>
+		<servlet-name>InitLegacy</servlet-name>				
+		<servlet-class>com.api.lo.legacy</servlet-class>
+		<load-on-startup>100</load-on-startup>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>SSOOut2LegacyManager</servlet-name>
+		<servlet-class>com.api.SSOOut2LegacyManager</servlet-class>	
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>SSOOut2LegacyManager</servlet-name>
+		<url-pattern>/SSOOut2LegacyManager.do</url-pattern>
+	</servlet-mapping>
+
+	<env-entry>
+		<env-entry-name>sso_url</env-entry-name>	
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>98.15.11.62</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>sso_port</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>8001</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>ltnr_url</env-entry-name>	
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>/sso/servlet/SSOListener</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>legc_id</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>smartBoard</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>link_page</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>/ssoProc</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>ses_name1</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>userId</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>ses_name2</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>userName</env-entry-value>
+	</env-entry>
+    	<env-entry>
+		<env-entry-name>ses_name3</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>organId</env-entry-value>
+	</env-entry>
+    	<env-entry>
+		<env-entry-name>ses_name4</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>organName</env-entry-value>
+	</env-entry>
+    	<env-entry>
+		<env-entry-name>ses_name5</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value></env-entry-value>
+	</env-entry>
+-->
+<!-- SSO end -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>login.html</welcome-file>
+  </welcome-file-list>
+</web-app>

@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="clientsMng">
+	<resultMap id="clientInfoMap" type="clientsInfoResultVO">
+	   <result property="clientId" column="clientId"/>
+	   <result property="organId" column="organId"/>
+	   <result property="organName" column="organName"/>
+	   <result property="clientName" column="clientName"/>
+	   <result property="clientIp" column="clientIp"/>
+	   <result property="holidayOff" column="holidayOff"/>	   
+	   <result property="adcd" column="adcd"/>
+	   <result property="clientAddr" column="clientAddr"/>
+	   <result property="longitude" column="longitude"/>
+	   <result property="latitude" column="latitude"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="updateDate" column="updateDate"/>
+	   <result property="activeYn" column="activeYn"/>
+	   <result property="layoutType" column="layoutType"/>
+	   <result property="resolutionId" column="resolutionId"/>			
+	   <result property="smartFrame" column="smartFrame"/>
+	   <result property="tBar" column="tBar"/>
+	   <result property="bBar" column="bBar"/>
+	   <collection property="boards" column="clientId" ofType= "java.lang.String" select="selectClientBoardsList">
+	   </collection>
+	   <!-- 
+	   <collection property="customHolidays" column="clientId" ofType= "java.lang.String" select="selectCustomHolidayList">
+	   </collection>-->
+	   <collection property="weekSchedule" column="clientId" ofType= "java.lang.String" select="selectWeekSchedule">
+	   </collection> 
+	</resultMap>
+	
+	<resultMap id="clientHolidayMap" type="clientsInfoResultVO">
+	   <result property="clientId" column="clientId"/>
+	   <result property="holidayOff" column="holidayOff"/>
+	   <result property="customHolidayOff" column="customHolidayOff"/>
+	   <collection property="customHolidays" column="clientId" ofType= "java.lang.String" select="selectCustomHolidayList">
+	   </collection>
+	   <collection property="weekSchedule" column="clientId" ofType= "java.lang.String" select="selectWeekSchedule">
+	   </collection>
+	</resultMap>
+	
+	<select id="selectClientsInfoList" parameterType="clientsInfoVO" resultMap="clientInfoMap">
+		SELECT 
+			A.CLIENT_ID clientId,
+			A.ORGAN_ID AS organId,
+			(SELECT NAME FROM TB_ORGANIZATION WHERE ORGAN_ID = A.ORGAN_ID) AS organName,
+			A.CLIENT_NAME AS clientName,
+			A.CLIENT_IP AS clientIp,
+			A.HOLIDAY_OFF AS holidayOff,
+			A.CUSTOM_HOLIDAY_OFF AS customHolidayOff,
+			A.ADCD AS adcd,
+			A.CLIENT_ADDR AS clientAddr,
+			A.LONGITUDE AS longitude,
+			A.LATITUDE AS latitude,
+			A.CREATE_DATE AS createDate,
+			A.UPDATE_DATE AS updateDate,
+			A.ACTIVE_YN AS activeYn,
+			A.T_BAR AS tBar,
+			A.B_BAR AS bBar,
+			B.STATUS AS status
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CLIENT_MNTR B
+			ON A.CLIENT_ID = B.CLIENT_ID        
+		<if test="roleType != null  and  !roleType.equalsIgnoreCase('S')">		
+			INNER JOIN (SELECT DISTINCT CLIENT_ID FROM TB_USER_CLIENT 		
+			WHERE USER_ID = #{userId}		
+			) C
+			ON B.CLIENT_ID = C.CLIENT_ID    
+		</if>         
+		ORDER BY A.CLIENT_NAME, A.CREATE_DATE DESC
+		<if test="pageCount != null  and  !pageCount.equals('') and pageCount >0">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>	
+	
+	<select id="selectClientsInfo" parameterType="clientsInfoVO" resultMap="clientInfoMap">
+		SELECT 
+			A.CLIENT_ID clientId,
+			A.ORGAN_ID AS organId,
+			(SELECT NAME FROM TB_ORGANIZATION WHERE ORGAN_ID = A.ORGAN_ID) AS organName,
+			A.CLIENT_NAME AS clientName,
+			A.CLIENT_IP AS clientIp,
+			A.HOLIDAY_OFF AS holidayOff,
+			A.CUSTOM_HOLIDAY_OFF AS customHolidayOff,
+			A.CLIENT_ADDR AS clientAddr,
+			A.LONGITUDE AS longitude,
+			A.LATITUDE AS latitude,
+			A.CREATE_DATE AS createDate,
+			A.UPDATE_DATE AS updateDate,
+			B.STATUS AS status,
+			A.SMART_FRAME AS smartFrame,
+			A.LAYOUT_TYPE AS layoutType,
+			A.RESOLUTION_ID AS resolutionId,
+			SMART_FRAME AS smartFrame
+		FROM TB_CLIENTS A
+		LEFT JOIN TB_CLIENT_MNTR B
+		ON A.CLIENT_ID = B.CLIENT_ID
+		WHERE A.CLIENT_ID = #{clientId}
+	</select>
+	
+	<select id="selectClientInfo" parameterType="clientsInfoVO" resultType="java.util.HashMap">
+		SELECT 
+			CLIENT_ID clientId,
+			CLIENT_NAME AS clientName,
+			CLIENT_IP AS clientIp,
+			HOLIDAY_OFF AS holidayOff,
+			CUSTOM_HOLIDAY_OFF AS customHolidayOff,
+			CLIENT_ADDR AS clientAddr,
+			LONGITUDE AS longitude,
+			LATITUDE AS latitude,
+			CREATE_DATE AS createDate,
+			UPDATE_DATE AS updateDate,
+			SMART_FRAME AS smartFrame,
+			T_BAR AS tBar,
+			B_BAR AS bBar
+		FROM TB_CLIENTS
+		WHERE CLIENT_ID = #{clientId}
+	</select>
+	<select id="selectClientBoardsList" parameterType="clientsInfoVO" resultType="java.util.HashMap">
+		SELECT 
+			A.CLIENT_ID clientId,
+			A.BOARD_INDEX AS boardIndex,
+			A.BOARD_TYPE AS boardType,
+			A.ACTIVE_YN AS activeYn,			
+			A.RESOLUTION_ID AS resolutionId,
+			A.ALARM_YN AS alarmYn,
+			B.LAYOUT_TYPE AS layoutType,
+			B.WIDTH AS width,
+			B.HEIGHT AS height,
+			B.INFO AS info
+		FROM TB_CLIENTS_BOARD A
+		LEFT JOIN TB_RESOLUTION B
+		ON A.RESOLUTION_ID = B.RESOLUTION_ID
+		WHERE A.CLIENT_ID = #{clientId}
+		ORDER BY A.BOARD_INDEX ASC
+	</select>
+	<select id="selectTemplateBoardsList" parameterType="clientsInfoVO" resultType="boardTemplateInfoVO">
+		SELECT 
+			B.CLIENT_ID AS clientId,
+			B.BOARD_INDEX AS boardIndex,
+			B.BOARD_TYPE AS boardType,
+			A.SMART_FRAME AS smartFrame
+		FROM TB_CLIENTS A 
+		INNER JOIN TB_CLIENTS_BOARD B ON A.CLIENT_ID = B.CLIENT_ID
+		WHERE A.CLIENT_ID = #{clientId}
+		ORDER BY B.ORDERING ASC, B.BOARD_INDEX ASC
+	</select>
+	
+	<select id="selectCustomHolidayList" parameterType="clientsInfoVO" resultType="customHolidayOffVO">
+		SELECT 
+			EXCEPT_DAY AS exceptDay,
+			DAY_TITLE AS dayTitle,
+			EXCEPT_TYPE AS exceptType
+		FROM TB_EXCEPT_SCHEDULE
+		WHERE EXCEPT_TYPE = '1'
+	<!-- 	WHERE CLIENT_ID = #{clientId}  -->
+	</select>
+	<select id="selectTotalClientsInfoList" parameterType="clientsInfoVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(A.CLIENT_ID) AS totalCount 
+			FROM TB_CLIENTS A
+		INNER JOIN TB_CLIENT_MNTR B
+			ON A.CLIENT_ID = B.CLIENT_ID     
+		<if test="roleType != null  and  !roleType.equalsIgnoreCase('S')">		   
+		INNER JOIN (SELECT DISTINCT CLIENT_ID FROM TB_USER_CLIENT 		
+			WHERE USER_ID = #{userId}		
+		) C
+		ON B.CLIENT_ID = C.CLIENT_ID		
+		</if>		
+	</select>
+
+	<insert id="saveClientsInfo" parameterType="clientsInfoVO" useGeneratedKeys="true"
+				    keyProperty="clientId" keyColumn="clientId">
+		INSERT INTO TB_CLIENTS (
+			ORGAN_ID,
+			CLIENT_NAME,
+			CLIENT_IP,
+			ACTIVE_YN,
+			LAYOUT_TYPE,
+			RESOLUTION_ID,
+			SMART_FRAME
+		) VALUES (
+			#{organId},
+			#{clientName},
+			#{clientIp},
+			'Y',
+			#{layoutType},
+			#{resolutionId},
+			#{smartFrame}
+		)
+
+	</insert>
+	
+	<insert id="saveClientBoardsInfo" parameterType="clientsInfoVO">
+		INSERT INTO TB_CLIENTS_BOARD (
+			CLIENT_ID,
+			BOARD_INDEX,
+			BOARD_TYPE,
+			RESOLUTION_ID,
+			LAYOUT_TYPE
+			
+		) VALUES
+		<foreach collection="boards" item="item" index="index" open="(" separator="),("  close=")">
+			#{clientId},
+			#{item.boardIndex},
+			#{item.boardType},
+			#{item.resolutionId},
+			#{item.layoutType}
+		</foreach>
+	</insert>
+	
+	<insert id="saveClientSchedule" parameterType="clientScheduleVO">
+		INSERT INTO TB_CLIENTS_SCHEDULE (
+			CLIENT_ID,
+			WEEK_DAY,
+			ORDERING
+		) VALUES
+		<foreach collection="list" item="item" index="index" open="(" separator="),("  close=")">
+			#{item.clientId},
+			#{item.weekDay},
+			#{item.ordering}
+		</foreach>
+	</insert>
+	
+	<update id="updateClientsInfo" parameterType="clientsInfoVO">
+		UPDATE TB_CLIENTS SET 
+			UPDATE_DATE = NOW()
+			<if test="clientName != null  and  !clientName.equals('')">
+				, CLIENT_NAME = #{clientName}
+			</if> 
+			<if test="clientIp != null  and  !clientIp.equals('')">
+				,CLIENT_IP = #{clientIp}
+			</if>
+			<if test="holidayOff != null  and  !holidayOff.equals('')">
+				,HOLIDAY_OFF = #{holidayOff}
+			</if>
+			<if test="customHolidayOff != null  and  !customHolidayOff.equals('')">
+				,CUSTOM_HOLIDAY_OFF = #{customHolidayOff}
+			</if>
+			<if test="clientIp != null  and  !clientIp.equals('')">
+				,CLIENT_IP = #{clientIp}
+			</if>
+			<if test="clientAddr != null  and  !clientAddr.equals('')">
+				, CLIENT_ADDR = #{clientAddr} 
+			</if>
+			<if test="longitude != null  and  !longitude.equals('')">
+				, LONGITUDE = #{longitude} 
+			</if>
+			<if test="latitude != null  and  !latitude.equals('')">
+				, LATITUDE = #{latitude} 
+			</if>
+			
+			<if test="activeYn != null  and  !activeYn.equals('')">
+				, ACTIVE_YN = #{activeYn} 
+			</if>
+			
+			<if test="layoutType != null  and  !layoutType.equals('')">
+				, LAYOUT_TYPE = #{layoutType} 
+			</if>
+			<if test="resolutionId != null  and  !resolutionId.equals('')">
+				, RESOLUTION_ID = #{resolutionId} 
+			</if>
+			<if test="smartFrame != null  and  !smartFrame.equals('')">
+				, SMART_FRAME = #{smartFrame} 
+			</if>
+		
+		WHERE CLIENT_ID = #{clientId}
+	</update>
+	
+	<update id="updateClientSchedule" parameterType="clientScheduleVO">
+		<foreach collection="list" item="item"  index="index"  separator=";" >
+	        UPDATE  TB_CLIENTS_SCHEDULE SET 
+	        CLIENT_ID = #{item.clientId}
+	        <if test="startTime != null  and  !startTime.equals('')">
+			,START_TIME =#{item.startTime},
+			</if>
+			<if test="endTime != null  and  !endTime.equals('')">
+			,END_TIME =#{item.endTime}, 
+			</if>
+			<if test="useYn != null  and  !useYn.equals('')">
+			,USE_YN =#{item.useYn}
+			</if>
+			WHERE CLIENT_ID = #{item.clientId}
+			AND WEEK_DAY = #{item.weekDay}
+		</foreach>
+	</update>
+	
+	<update id="updateClienBoardsInfo" parameterType="clientBoardsInfoVO">
+	<foreach collection="boards" item="item"  index="index"  separator=";" >
+		UPDATE TB_CLIENTS_BOARD
+		SET
+			BOARD_TYPE = #{item.boardType},
+			ACTIVE_YN = #{item.activeYn},
+			LAYOUT_TYPE = #{item.layoutType},
+			RESOLUTION_ID = #{item.resolutionId}
+		WHERE CLIENT_ID = #{item.clientId} AND BOARD_INDEX = #{item.boardIndex}
+		</foreach>
+	</update>
+
+	<delete id="deleteClientsInfoList" parameterType="java.util.List">
+			DELETE FROM TB_CLIENTS WHERE
+			<foreach item="item" index="index" collection="list" open="CLIENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<delete id="deleteClientsInfo" parameterType="clientsInfoVO">
+			DELETE FROM TB_CLIENTS
+			WHERE CLIENT_ID = #{clientId}
+	</delete>
+	
+	<delete id="deleteClientsBoardInfo" parameterType="clientsInfoVO">
+			DELETE FROM TB_CLIENTS_BOARD
+			WHERE CLIENT_ID = #{clientId}
+	</delete>
+	
+	<delete id="deleteClientsBoardInfoList" parameterType="java.util.List">
+			DELETE FROM TB_CLIENTS_BOARD WHERE 
+			<foreach item="item" index="index" collection="list" open="CLIENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<delete id="deleteClientsMonitoringInfo" parameterType="java.util.List">
+			DELETE FROM TB_CLIENT_MNTR WHERE
+			<foreach item="item" index="index" collection="list" open="CLIENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<delete id="deleteClientSchedule" parameterType="java.util.List">
+			DELETE FROM TB_CLIENTS_SCHEDULE WHERE 
+			<foreach item="item" index="index" collection="list" open="CLIENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	<select id="selectNextSeqClients" resultType="java.lang.Integer">
+		SELECT IFNULL(AUTO_INCREMENT,1) FROM information_schema.tables where table_name='tb_announce_conts'
+	</select>
+	
+	<select id="selectWeekSchedule" resultType="clientScheduleVO">
+		SELECT 
+			WEEK_DAY AS weekDay,
+			START_TIME AS startTime,
+			END_TIME AS endTime,
+			USE_YN AS useYN,
+			ORDERING AS ordering	
+		FROM TB_CLIENTS_SCHEDULE
+		<!-- 	WHERE CLIENT_ID = #{clientId} -->
+		ORDER BY ORDERING ASC
+	</select>
+	
+	<select id="selectInitPage" resultType="java.util.HashMap" parameterType="clientBoardDataReqVO">
+		SELECT A.ORGAN_ID AS organId, A.TEMPLATE_URL AS templateUrl,
+		(SELECT ALARM_YN FROM TB_CLIENTS_BOARD WHERE CLIENT_ID = #{clientId} AND BOARD_INDEX =  #{boardIndex}) AS alarmYn,
+		(SELECT MAIN_BOARD FROM TB_CLIENTS WHERE CLIENT_ID = #{clientId}) AS mainBoard
+		FROM TB_TEMPLATE A
+        INNER JOIN TB_BOARD_TEMPLATE B
+        ON A.TEMPLATE_ID = B.TEMPLATE_ID AND B.CLIENT_ID = #{clientId} AND B.BOARD_INDEX =  #{boardIndex}
+		WHERE A.BOARD_TYPE IN (
+			SELECT BOARD_TYPE FROM TB_CLIENTS_BOARD
+		    WHERE CLIENT_ID =#{clientId} AND BOARD_INDEX =  #{boardIndex}
+		)
+		AND A.IS_ACTIVE = 'Y'
+		<!--  AND (ORGAN_ID = #{organId} OR DEFAULT_YN = 'Y' ) -->
+	</select>
+	
+	<select id="selectInitSmartFramePage" resultType="java.util.HashMap" parameterType="clientBoardDataReqVO">
+		SELECT A.ORGAN_ID AS organId, A.TEMPLATE_URL AS templateUrl,
+		(SELECT ALARM_YN FROM TB_CLIENTS_BOARD WHERE CLIENT_ID = #{clientId} AND BOARD_INDEX = 0) AS alarmYn,
+		(SELECT MAIN_BOARD FROM TB_CLIENTS WHERE CLIENT_ID = #{clientId}) AS mainBoard
+		FROM TB_TEMPLATE A
+        INNER JOIN TB_CLIENTS_SMARTFRAME B
+        ON A.TEMPLATE_ID = B.TEMPLATE_ID AND B.CLIENT_ID = #{clientId}
+		WHERE A.IS_ACTIVE = 'Y'
+	</select>
+	
+	<select id="selectOrganClientsInfoList" parameterType="clientsInfoVO" resultMap="clientInfoMap">
+		SELECT 
+			A.CLIENT_ID clientId,
+			A.ORGAN_ID AS organId,
+			(SELECT NAME FROM TB_ORGANIZATION WHERE ORGAN_ID = A.ORGAN_ID) AS organName,
+			A.CLIENT_NAME AS clientName,
+			A.CLIENT_IP AS clientIp,
+			A.HOLIDAY_OFF AS holidayOff,
+			A.CUSTOM_HOLIDAY_OFF AS customHolidayOff,
+			A.CREATE_DATE AS createDate,
+			A.UPDATE_DATE AS updateDate,
+			B.STATUS AS status
+		FROM TB_CLIENTS A
+		LEFT JOIN TB_CLIENT_MNTR B
+		ON A.CLIENT_ID = B.CLIENT_ID
+		WHERE A.ORGAN_ID = #{organId}
+		ORDER BY A.CREATE_DATE DESC
+	</select>
+	
+	<select id="selectClientBoardInfo" parameterType="clientBoardDataReqVO" resultType="clientBoardsInfoVO">
+		SELECT 
+			A.CLIENT_ID clientId,
+			A.BOARD_INDEX AS boardIndex,
+			A.BOARD_TYPE AS boardType,
+			A.ACTIVE_YN AS activeYn,			
+			A.RESOLUTION_ID AS resolutionId,
+			A.ALARM_YN AS alarmYn,
+			(SELECT COUNT(CLIENT_ID) FROM TB_CLIENTS_BOARD WHERE CLIENT_ID = #{clientId} AND BOARD_TYPE = A.BOARD_TYPE AND ACTIVE_YN = 'Y') AS boardCount,
+			(SELECT MIN(BOARD_INDEX) FROM TB_CLIENTS_BOARD WHERE CLIENT_ID = #{clientId} AND BOARD_TYPE = A.BOARD_TYPE AND ACTIVE_YN = 'Y') AS boardMinIndex
+		FROM TB_CLIENTS_BOARD A
+		WHERE A.CLIENT_ID = #{clientId} AND A.BOARD_INDEX = #{boardIndex} 
+		LIMIT 1
+	</select>
+	<select id="selectBoardResolution" parameterType="clientsInfoVO" resultType="clientBoardsInfoVO">
+		SELECT 
+			DISTINCT CLIENT_ID clientId,	RESOLUTION_ID AS resolutionId ,LAYOUT_TYPE AS layoutType
+			FROM TB_CLIENTS_BOARD
+			WHERE CLIENT_ID = #{clientId}
+		LIMIT 1
+	</select>
+		
+	<select id="selectClientHoliday" parameterType="clientsInfoVO" resultMap="clientHolidayMap">
+		SELECT 
+			A.CLIENT_ID clientId,
+			A.ORGAN_ID AS organId,
+			(SELECT NAME FROM TB_ORGANIZATION WHERE ORGAN_ID = A.ORGAN_ID) AS organName,
+			A.CLIENT_NAME AS clientName,
+			A.CLIENT_IP AS clientIp,
+			A.HOLIDAY_OFF AS holidayOff,
+			A.CUSTOM_HOLIDAY_OFF AS customHolidayOff,
+			A.CREATE_DATE AS createDate
+		FROM TB_CLIENTS A
+		LEFT JOIN TB_CLIENTS_SCHEDULE B
+			ON A.CLIENT_ID = B.CLIENT_ID
+		LEFT JOIN TB_EXCEPT_SCHEDULE C
+			ON B.CLIENT_ID = C.CLIENT_ID		
+		LIMIT 1
+	</select>
+	
+	<update id="updateClientScheduleTemp" parameterType="clientScheduleVO">
+	       <foreach collection="list" item="item"  index="index"  separator=";" >
+	        UPDATE  TB_CLIENTS_SCHEDULE SET 
+	        WEEK_DAY = #{item.weekDay}
+	        <if test="item.startTime != null  and  !item.startTime.equals('')">
+			,START_TIME =#{item.startTime}
+			</if>
+			<if test="item.endTime != null  and  !item.endTime.equals('')">
+			,END_TIME =#{item.endTime}
+			</if>
+			<if test="item.useYn != null  and  !item.useYn.equals('')">
+			,USE_YN =#{item.useYn}
+			</if>
+			WHERE WEEK_DAY = #{item.weekDay}
+		</foreach>
+	</update>
+	<delete id="deleteExceptSchedule">
+			DELETE FROM TB_EXCEPT_SCHEDULE
+	</delete>
+	<insert id="insertExceptSchedule" parameterType="customHolidayOffVO">
+		INSERT INTO TB_EXCEPT_SCHEDULE (
+			DAY_TITLE,
+			EXCEPT_DAY,
+			EXCEPT_TYPE			
+		) VALUES
+		<foreach collection="list" item="item" index="index" open="(" separator="),("  close=")">
+			#{item.dayTitle},
+			#{item.exceptDay},
+			'1'
+		</foreach>
+	</insert>
+	
+	<update id="updateClientsOperationStatus" parameterType="clientsInfoVO">
+		UPDATE TB_CLIENTS SET 
+			UPDATE_DATE = NOW()
+			<if test="holidayOff != null  and  !holidayOff.equals('')">
+			,HOLIDAY_OFF = #{holidayOff}
+			</if>
+			<if test="customHolidayOff != null  and  !customHolidayOff.equals('')">
+			,CUSTOM_HOLIDAY_OFF = #{customHolidayOff}
+			</if>
+			
+	</update>
+	
+	<select id="selectIsOffDay" resultType="java.util.HashMap">
+		SELECT 
+		    IF (((holidayOff = 'Y' AND  holidayCount > 0) OR (customHolidayOff = 'Y' AND  exceptDayCount > 0 )),'Y','N') 
+		    AS  isHolidayOff
+		FROM (
+				SELECT 
+					HOLIDAY_OFF AS holidayOff,
+					CUSTOM_HOLIDAY_OFF AS customHolidayOff,
+					(SELECT COUNT(HOLIDAY) FROM TB_CLIENT_HOLIDAY WHERE HOLIDAY = DATE_FORMAT(NOW(), '%Y-%m-%d')) AS holidayCount, 
+		            (SELECT COUNT(EXCEPT_DAY) FROM TB_EXCEPT_SCHEDULE WHERE EXCEPT_DAY = DATE_FORMAT(NOW(), '%Y-%m-%d')) AS exceptDayCount
+				FROM TB_CLIENTS	
+				LIMIT 1
+		) A
+	</select>
+	
+	<update id="updateClientBoardInfo" parameterType="clientBoardsInfoVO">
+		UPDATE TB_CLIENTS_BOARD
+		SET
+			ACTIVE_YN = #{activeYn}
+			<if test="resolutionId != null  and  !resolutionId.equals('')">
+			, RESOLUTION_ID = #{resolutionId}
+			</if>
+		WHERE CLIENT_ID = #{clientId} AND BOARD_INDEX = #{boardIndex}
+	</update>
+	
+
+	<insert id="saveBoardTemplateInfo" parameterType="boardTemplateInfoVO">
+		INSERT INTO TB_BOARD_TEMPLATE (
+			CLIENT_ID,
+			BOARD_INDEX,
+			TEMPLATE_ID			
+		) VALUES
+		<foreach collection="list" item="item" index="index" open="(" separator="),("  close=")">
+			#{item.clientId},
+			#{item.boardIndex},
+			#{item.templateId}
+		</foreach>
+	</insert>
+	<insert id="saveClientTemplateInfo" parameterType="clientTemplateInfoVO">
+		INSERT INTO TB_TEMPLATE_CONTENTS (
+			TEMPLATE_ID,
+			CONTENT_TYPE,
+			TEMPLATE_TYPE,
+			CLIENT_ID,
+			BOARD_INDEX,
+			LAYOUT_TYPE			
+		) VALUES
+		<foreach collection="list" item="item" index="index" open="(" separator="),("  close=")">
+			#{item.templateId},
+			#{item.contentType},
+			#{item.templateType},
+			#{item.clientId},
+			#{item.boardIndex},
+			#{item.layoutType}
+		</foreach>
+	</insert>
+	<select id="selectClientTemplateCount" parameterType = "clientsInfoVO" resultType="java.util.HashMap">
+		SELECT boardCnt,IFNULL(templateCnt,0) AS templateCnt ,A.CLIENT_ID AS clientId
+		FROM (SELECT COUNT(CLIENT_ID) AS boardCnt, CLIENT_ID FROM TB_CLIENTS_BOARD WHERE CLIENT_ID = #{clientId} GROUP BY CLIENT_ID) AS A
+		LEFT JOIN (SELECT COUNT(CLIENT_ID) AS templateCnt,CLIENT_ID FROM TB_TEMPLATE_CONTENTS WHERE CLIENT_ID = #{clientId} GROUP BY CLIENT_ID)   B
+		ON A.CLIENT_ID = B.CLIENT_ID 
+	</select>
+	
+	<update id="updateBoardTemplateInfoList" parameterType="boardTemplateInfoVO">
+		<foreach collection="list" item="item"  index="index"  separator=";" >
+		UPDATE TB_BOARD_TEMPLATE
+		SET
+			TEMPLATE_ID = #{item.templateId}
+		WHERE CLIENT_ID = #{item.clientId} AND BOARD_INDEX = #{item.boardIndex}
+		</foreach>
+	</update>
+	
+	<update id="updateBoardTemplateInfo" parameterType="boardTemplateInfoVO">
+		UPDATE TB_BOARD_TEMPLATE
+		SET
+			TEMPLATE_ID = #{templateId}
+		WHERE CLIENT_ID = #{clientId} AND BOARD_INDEX = #{boardIndex}
+	</update>
+	
+	<delete id="deleteBoardTemplateInfo" parameterType="clientsInfoVO">
+			DELETE FROM TB_BOARD_TEMPLATE 
+			WHERE CLIENT_ID = #{clientId}			
+	</delete>
+	
+	<update id="updateClientMntrStatus">
+		UPDATE TB_CLIENT_MNTR
+		SET
+			STATUS = 0,
+			CPU = 0,
+			MEMORY = 0,
+			DISK = 0
+		WHERE UPDATE_DATE <![CDATA[ < ]]>  (NOW() - INTERVAL 3 MINUTE)
+	</update>
+	
+	<delete id="deleteClientsTemplate" parameterType="java.util.List">
+			DELETE FROM TB_BOARD_TEMPLATE WHERE
+			<foreach item="item" index="index" collection="list" open="CLIENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<delete id="deleteTemplateContents" parameterType="java.util.List">
+			DELETE FROM TB_TEMPLATE_CONTENTS WHERE
+			<foreach item="item" index="index" collection="list" open="CLIENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<select id="selectClientSmartFramePageList" parameterType="clientBoardsInfoVO" resultMap="clientInfoMap">
+		SELECT 
+			A.CLIENT_ID clientId,
+			A.ORGAN_ID AS organId,
+			(SELECT NAME FROM TB_ORGANIZATION WHERE ORGAN_ID = A.ORGAN_ID) AS organName,
+			A.CLIENT_NAME AS clientName,
+			A.CLIENT_IP AS clientIp,
+			A.HOLIDAY_OFF AS holidayOff,
+			A.CUSTOM_HOLIDAY_OFF AS customHolidayOff,
+			A.CREATE_DATE AS createDate,
+			A.UPDATE_DATE AS updateDate,
+			B.STATUS AS status
+		FROM TB_CLIENTS A
+		LEFT JOIN TB_CLIENT_MNTR B
+		ON A.CLIENT_ID = B.CLIENT_ID
+		WHERE A.ORGAN_ID = #{organId}
+		ORDER BY A.CREATE_DATE DESC
+	</select>
+	
+	<insert id="insertSmartFrameInfo" parameterType="java.util.HashMap" >
+		INSERT INTO TB_CLIENTS_SMARTFRAME (
+			CLIENT_ID,
+			TEMPLATE_ID			
+		) VALUES (
+			#{clientId},
+			#{templateId}
+		)
+	</insert>
+	
+	<delete id="deleteSmartFrameInfo" parameterType="clientsInfoVO">
+			DELETE FROM TB_CLIENTS_SMARTFRAME WHERE
+			CLIENT_ID = #{clientId}
+	</delete>
+	
+</mapper>

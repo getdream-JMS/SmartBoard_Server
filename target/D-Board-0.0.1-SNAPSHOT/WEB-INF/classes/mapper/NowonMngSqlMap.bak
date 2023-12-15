@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nowonMng2">	
+	<select id="selectNowonDept" resultType="java.util.HashMap">
+		SELECT 
+			DEPT_GBN,
+			DEPT_ID,
+			DEPT_NAME,
+			UPPER_DEPT_ID,
+			DEPT_ORDER,
+			DEPT_TEL						
+		FROM ssov_dept_outter
+	</select>	
+	<select id="selectNowonUser" resultType="java.util.HashMap">
+		SELECT 
+			USER_NAME,
+		    USER_ID,
+		    DEPT_ID,
+		    DEPT_NAME,
+		    REP_DEPT_id,
+		    REP_DEPT_NAME,
+		    POSITION_NAME,
+		    USER_SORT_SEQ,
+		    GRADE_NAME,
+		    TEL,
+		    MOBILE,
+		    EMAIL,
+		    JOIN_DAY,		    
+		    POSITION_NAME,
+		    BIRTH_YMD,
+		    PIC_ADDR
+		FROM ssov_user_outter
+		WHERE RETIRE_DAY IS NULL
+	</select>	
+	
+	<delete id="deleteNowonDept">
+		DELETE FROM TB_ORGANIZATION
+	</delete>
+	
+	<delete id="deleteNownUserInfo">
+		DELETE FROM TB_DEPARTMENT_MEMBER
+	</delete>
+	
+	<insert id="insertNowonDeptInfo" parameterType="java.util.List">
+		INSERT INTO TB_ORGANIZATION (
+			ORGAN_ID,
+			PARENT_ID,
+			NAME,
+			SEQ,
+			USE_YN
+		) VALUES
+		<foreach collection="list" item="element" index="index" open="(" separator="),("  close=")">
+			#{element.DEPT_ID},
+			<if test="element.UPPER_DEPT_ID.equals('6110000')">
+			'0',
+			</if>
+			<if test="!element.UPPER_DEPT_ID.equals('6110000')">
+			#{element.UPPER_DEPT_ID},
+			</if>
+			#{element.DEPT_NAME},
+			#{element.DEPT_ORDER},
+			'Y'			
+		</foreach>
+	</insert>
+	
+	<insert id="insertNowonUserInfo" parameterType="java.util.List">
+		INSERT INTO TB_DEPARTMENT_MEMBER (
+			USER_ID, 
+			USER_PASS, 
+			USER_NAME, 
+			ORGAN_ID,
+			COMPANY, 
+			EMAIL, 
+			TEL_NUM, 
+			PHONE, 
+			POSITION, 
+			PHOTO_PATH, 
+			SEQ
+		) VALUES
+		<foreach collection="list" item="element" index="index" open="(" separator="),("  close=")">
+			#{element.USER_ID},
+			MD5(#{element.USER_ID}),
+			#{element.USER_NAME},
+			#{element.DEPT_ID},
+			#{element.DEPT_NAME},
+			#{element.EMAIL},
+			#{element.TEL},
+			#{element.MOBILE},
+			#{element.POSITION_NAME},
+			#{element.PIC_ADDR},
+			#{element.USER_SORT_SEQ}
+		</foreach>
+	</insert>
+</mapper>

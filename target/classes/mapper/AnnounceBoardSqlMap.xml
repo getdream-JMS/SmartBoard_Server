@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="announceBoard">
+	<resultMap id="announceImagesMap" type="announceBoardResultVO">
+	   <result property="contentId" column="contentId"/>
+	   <result property="title" column="title"/>
+	   <result property="organId" column="organId"/>
+	   <result property="contentName" column="contentName"/>
+	   <result property="contentPath" column="contentPath"/>	   
+	   <result property="postingStart" column="postingStart"/>
+	   <result property="postingEnd" column="postingEnd"/>
+	   <result property="contentInfo" column="contentInfo"/>
+	   <result property="repeatType" column="repeatType"/>
+	   <result property="priority" column="priority"/>
+	   <result property="highlightYn" column="highlightYn"/>
+	   <result property="delExpired" column="delExpired"/>
+	   <result property="tags" column="tags"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="updateDate" column="updateDate"/>
+	   <result property="totalCount" column="totalCount"/>
+	    <result property="publisher" column="publisher"/>
+	    <result property="remainDay" column="remainDay"/>
+	   <collection property="contents" column="contentId" ofType= "java.lang.String" select="selectAnnounceImageList">
+	   </collection>
+	   <collection property="client" column="contentId" ofType= "java.lang.String" select="selectAnnounceContsLocationList">
+	   </collection>
+	</resultMap>
+
+	<select id="selectAnnounceBoardList" parameterType="announceBoardVO" resultMap="announceImagesMap">
+		SELECT C.* FROM (
+			SELECT 
+				A.CONTENT_ID AS contentId,
+				A.TITLE AS title,
+				A.ORGAN_ID AS organId,
+				A.CONTENT_PATH AS contentPath,
+				A.CONTENT_NAME AS contentName,
+				SUBSTRING(A.POSTING_START,1,8)  AS postingStart,
+				SUBSTRING(A.POSTING_END,1,8)  AS postingEnd,
+				A.CONTENT_INFO AS contentInfo,
+				A.REPEAT_TYPE AS repeatType,
+				A.PRIORITY AS priority,
+				A.HIGHLIGHT_YN AS highlightYn,
+				A.DEL_EXPIRED AS delExpired,
+				A.TAGS AS tags,
+				A.CREATE_DATE AS createDate,
+				A.UPDATE_DATE AS updateDate,
+				A.PUBLISHER AS publisher,
+				DATEDIFF(A.POSTING_END, DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')) AS remainDay,
+				A.ORIGIN_FILE AS originFile,
+				B.BOARD_TYPE
+			FROM TB_ANNOUNCE_CONTS AS A LEFT JOIN (
+				SELECT DISTINCT CONTENT_ID, BOARD_TYPE FROM TB_CONTS_CLIENTS 
+				WHERE BOARD_TYPE = #{boardType}) AS B ON A.CONTENT_ID = B.CONTENT_ID			
+		    WHERE 1 = 1
+			<if test="startDate != null  and  !startDate.equals('')">
+				AND ( 
+					(A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_START <![CDATA[ <= ]]>  #{endDate})
+					OR (A.POSTING_END <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+					OR (A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+					OR (A.POSTING_START <![CDATA[ <= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ >= ]]>  #{endDate})
+					)
+			</if>
+			<if test="tags != null  and  !tags.equals('')">
+				AND A.TAGS LIKE CONCAT('%',#{tags},'%')
+			</if>		
+			<if test="title != null  and  !title.equals('')">
+				AND A.TITLE LIKE CONCAT('%',#{title},'%')
+			</if>	
+			<if test='roleType != null  and  roleType.equals("P")'>
+				AND A.PUBLISHER = #{userId}
+			</if>	
+		) C
+		<if test="sortingCol != null  and  !sortingCol.equals('')">
+		ORDER BY CONCAT('C.',${sortingCol}) ${sortingType}
+		</if>
+		<if test="sortingCol == null  or  sortingCol.equals('')">
+		ORDER BY C.createDate DESC
+		</if>
+		<if test="startRowNum != null  and  !startRowNum.equals('')">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>	
+	
+	<select id="selectAnnounceBoardInfo" parameterType="announceBoardVO" resultMap="announceImagesMap">
+		SELECT 
+			CONTENT_ID AS contentId,
+			TITLE AS title,
+			ORGAN_ID AS organId,
+			CONTENT_PATH AS contentPath,
+			CONTENT_NAME AS contentName,
+			SUBSTRING(POSTING_START,1,8)  AS postingStart,
+			SUBSTRING(POSTING_END,1,8)  AS postingEnd,
+			CONTENT_INFO AS contentInfo,
+			REPEAT_TYPE AS repeatType,
+			PRIORITY AS priority,
+			HIGHLIGHT_YN AS highlightYn,
+			DEL_EXPIRED AS delExpired,
+			TAGS AS tags,
+			CREATE_DATE AS createDate,
+			UPDATE_DATE AS updateDate,
+			PUBLISHER AS publisher,
+			ORIGIN_FILE AS originFile
+		FROM TB_ANNOUNCE_CONTS
+		WHERE CONTENT_ID = #{contentId}
+	</select>
+	<select id="selectTotalAnnounceBoardList" parameterType="announceBoardVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(A.CONTENT_ID) AS totalCount 
+			FROM TB_ANNOUNCE_CONTS AS A LEFT JOIN (
+				SELECT DISTINCT CONTENT_ID, BOARD_TYPE FROM TB_CONTS_CLIENTS 
+				WHERE BOARD_TYPE = #{boardType}) AS B ON A.CONTENT_ID = B.CONTENT_ID			
+		        WHERE 1 = 1
+		<if test="startDate != null  and  !startDate.equals('')">
+			AND ( 
+				(A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_START <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_END <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_START <![CDATA[ <= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ >= ]]>  #{endDate})
+				)
+		</if>
+		<if test="tags != null  and  !tags.equals('')">
+			AND A.TAGS LIKE CONCAT('%',#{tags},'%')
+		</if>		
+		<if test="title != null  and  !title.equals('')">
+			AND A.TITLE LIKE CONCAT('%',#{title},'%')
+		</if>	
+	</select>
+	<select id="selectAnnounceImageList" parameterType="java.lang.String" resultType="announceBoardDetailsVO">
+		SELECT 
+			B.CONTENT_ID AS contentId,
+			B.CONT_INDEX AS contIndex,
+			B.FILE_NAME AS fileName,
+			CONVERT(TRIM(REPLACE(C.TTS_INFO,'\r\n','')) USING utf8) AS ttsInfo
+		FROM TB_ANNOUNCE_CONTS A 
+		INNER JOIN TB_CONTS_DETAILS B
+		ON A.CONTENT_ID = B.CONTENT_ID
+		LEFT JOIN TB_TTS_INFO C
+		ON B.CONTENT_ID = C.CONTENT_ID AND B.CONT_INDEX = C.CONT_INDEX
+		WHERE B.CONTENT_ID = #{contentId}
+		ORDER BY B.CONT_INDEX ASC
+	</select>	
+	
+	<select id="selectAnnounceContsLocationList" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT 
+			B.ORGAN_ID AS organId,
+			B.CLIENT_NAME AS clientName,
+			B.CLIENT_ID AS clientId
+		FROM TB_CONTS_CLIENTS A
+		INNER JOIN TB_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID
+		WHERE A.BOARD_TYPE = '001'
+		AND A.CONTENT_ID = #{contentId}
+		ORDER BY A.CLIENT_ID ASC
+	</select>
+	
+	<insert id="saveAnnounceBoardInfo" parameterType="announceBoardVO" useGeneratedKeys="true"
+				    keyProperty="contentId" keyColumn="contentId">
+		INSERT INTO TB_ANNOUNCE_CONTS (
+			TITLE,
+			ORGAN_ID,
+			CONTENT_PATH,
+			CONTENT_NAME,
+			POSTING_START,
+			POSTING_END,
+			CONTENT_INFO,
+			REPEAT_TYPE,
+			PRIORITY,
+			HIGHLIGHT_YN,
+			DEL_EXPIRED,
+			TAGS,
+			ORIGIN_FILE,
+			PUBLISHER,
+			CONTENT_TYPE
+		) VALUES (
+			#{title},
+			#{organId},
+			#{contentPath},
+			#{contentName},
+			#{postingStart},
+			#{postingEnd},
+			#{contentInfo},
+			#{repeatType},
+			#{priority},
+			#{highlightYn},
+			#{delExpired},
+			#{tags},
+			#{originFile},
+			#{publisher},
+			'005'
+		)
+
+	</insert>
+	<insert id="saveAnnounceBoardImage" parameterType="announceBoardDetailsVO">
+		INSERT INTO TB_CONTS_DETAILS (
+			CONTENT_ID,
+			CONT_INDEX,
+			FILE_NAME
+		) VALUES
+		<foreach collection="list" item="element" index="index" open="(" separator="),("  close=")">
+			#{element.contentId},
+			#{element.contIndex},
+			#{element.fileName}
+		</foreach>
+	</insert>
+	<update id="updateAnnounceBoardInfo" parameterType="announceBoardVO">
+		UPDATE TB_ANNOUNCE_CONTS
+		SET
+			TITLE = #{title},
+			ORGAN_ID = #{organId},
+			<if test="contentPath != null  and  !contentPath.equals('')">
+			CONTENT_PATH = #{contentPath},
+			</if>
+			<if test="contentName != null  and  !contentName.equals('')">
+			CONTENT_NAME = #{contentName},
+			</if>
+			POSTING_START = #{postingStart},
+			POSTING_END = #{postingEnd},
+			CONTENT_INFO = #{contentInfo},
+			REPEAT_TYPE = #{repeatType},
+			PRIORITY = #{priority},
+			HIGHLIGHT_YN = #{highlightYn},
+			DEL_EXPIRED = #{delExpired},
+			TAGS = #{tags},
+			<if test="originFile != null  and  !originFile.equals('')">
+			ORIGIN_FILE = #{originFile},
+			</if>
+			UPDATE_DATE = NOW()
+			
+		WHERE CONTENT_ID = #{contentId}
+	</update>
+	
+	<delete id="deleteAnnounceBoardList" parameterType="java.util.List">
+			DELETE FROM TB_ANNOUNCE_CONTS WHERE
+			<foreach item="item" index="index" collection="list" open="CONTENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<delete id="deleteAnnounceBoardInfo" parameterType="announceBoardVO">
+			DELETE FROM TB_ANNOUNCE_CONTS
+			WHERE CONTENT_ID = #{contentId}
+	</delete>
+	
+	<delete id="deleteAnnounceBoardImageList" parameterType="java.util.ArrayList">
+		DELETE FROM TB_CONTS_DETAILS WHERE
+			<foreach item="item" index="index" collection="list" open="CONTENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	<delete id="deleteAnnounceBoardImage" parameterType="announceBoardVO">
+		DELETE FROM TB_CONTS_DETAILS
+		WHERE CONTENT_ID = #{contentId}
+	</delete>
+	
+	<select id="selectNextSeqAnnounce" resultType="java.lang.Integer">
+		SELECT IFNULL(AUTO_INCREMENT,1) FROM information_schema.tables where table_name='tb_announce_conts'
+	</select>
+	
+	<delete id="deleteTtsInfoList" parameterType="java.util.ArrayList">
+		DELETE FROM TB_TTS_INFO WHERE
+		<foreach item="item" index="index" collection="list" open="CONTENT_ID IN (" close=")" separator="," >
+			#{item}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteTtsInfo" parameterType="announceBoardVO">
+		DELETE FROM TB_TTS_INFO
+		WHERE CONTENT_ID = #{contentId}
+	</delete>
+	
+	<insert id="saveTtsInfo" parameterType="ttsInfoVO">
+		INSERT INTO TB_TTS_INFO (
+			CONTENT_ID,
+			CONT_INDEX,
+			TTS_INFO
+		) VALUES
+		<foreach collection="list" item="item" index="index" open="(" separator="),("  close=")">
+			#{item.contentId},
+			#{item.contIndex},
+			#{item.ttsInfo}
+		</foreach>
+	</insert>
+	
+</mapper>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="missingBoard">
+	<resultMap id="missingMap" type="missingPeopleInfoVO">		
+	   <result property="id" column="id"/>
+	   <result property="photoName" column="photoName"/>
+	   <result property="originFile" column="originFile"/>
+	   <result property="gender" column="gender"/>
+	   <result property="name" column="name"/>
+	   <result property="age" column="age"/>	   
+	   <result property="lostType" column="lostType"/>
+	   <result property="lostTime" column="lostTime"/>
+	   <result property="lostLocation" column="lostLocation"/>
+	   <result property="lookLike" column="lookLike"/>
+	   <result property="contentPath" column="contentPath"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="postingStart" column="postingStart"/>
+	   <result property="postingEnd" column="postingEnd"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="updateDate" column="updateDate"/>	    
+	   <collection property="connects" column="id" ofType= "java.lang.Integer" select="selectMissingConnectList">
+	   </collection>
+	   
+	</resultMap>
+
+	<select id="selectMissingManagerList" parameterType="missingPeopleManagerVO" resultMap="missingMap">
+		SELECT A.* FROM  (
+			SELECT 
+				ID AS id,
+				PHOTO_NAME AS photoName,
+				ORIGIN_FILE AS originFile,
+				GENDER AS gender,
+				NAME AS name,
+				AGE AS age,
+				LOST_TYPE AS lostType,
+				LOST_TIME AS lostTime,
+				LOST_LOCATION AS lostLocation,
+				LOOK_LIKE AS lookLike,
+				CONTENT_PATH AS contentPath,
+				POSTING_START AS postingStart,
+				POSTING_END AS postingEnd,
+				END_YN  AS endYn,
+				CREATE_DATE AS createDate,
+				UPDATE_DATE AS updateDate
+			FROM TB_MISSING_PEOPLE
+			WHERE 1=1			
+			<if test="startDate != null  and  !startDate.equals('')">
+				AND ( 
+					(POSTING_START <![CDATA[ >= ]]>  #{startDate} AND POSTING_START <![CDATA[ <= ]]>  #{endDate})
+					OR (POSTING_END <![CDATA[ >= ]]>  #{startDate} AND POSTING_END <![CDATA[ <= ]]>  #{endDate})
+					OR (POSTING_START <![CDATA[ >= ]]>  #{startDate} AND POSTING_END <![CDATA[ <= ]]>  #{endDate})
+					OR (POSTING_START <![CDATA[ <= ]]>  #{startDate} AND POSTING_END <![CDATA[ >= ]]>  #{endDate})
+					)
+			</if>				
+		) A
+		<if test="sortingCol != null  and  !sortingCol.equals('')">
+		ORDER BY CONCAT('A.',${sortingCol}) ${sortingType}
+		</if>
+		<if test="sortingCol == null  or  sortingCol.equals('')">
+		ORDER BY A.createDate DESC
+		</if>
+		LIMIT #{startRowNum}, #{pageCount}
+	</select>	
+	
+	<select id="selectMissingClientList" parameterType="missingPeopleReqInfoVO" resultMap="missingMap">
+			SELECT 
+				ID AS id,
+				PHOTO_NAME AS photoName,
+				ORIGIN_FILE AS originFile,
+				GENDER AS gender,
+				NAME AS name,
+				AGE AS age,
+				LOST_TYPE AS lostType,
+				LOST_TIME AS lostTime,
+				LOST_LOCATION AS lostLocation,
+				LOOK_LIKE AS lookLike,
+				CONTENT_PATH AS contentPath,
+				POSTING_START AS postingStart,
+				POSTING_END AS postingEnd,
+				END_YN  AS endYn,
+				CREATE_DATE AS createDate,
+				UPDATE_DATE AS updateDate
+			FROM TB_MISSING_PEOPLE
+			WHERE END_YN = 'N'
+			<if test="curDate != null  and  !curDate.equals('')">
+			AND POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND POSTING_END <![CDATA[ >= ]]>  #{curDate}
+			</if>
+		ORDER BY CREATE_DATE DESC
+	</select>	
+	
+	<select id="selectMissingBoardInfo" parameterType="missingPeopleReqInfoVO" resultMap="missingMap">
+		SELECT 
+			ID AS id,
+			PHOTO_NAME AS photoName,
+			ORIGIN_FILE AS originFile,
+			GENDER AS gender,
+			NAME AS name,
+			AGE AS age,
+			LOST_TYPE AS lostType,
+			LOST_TIME AS lostTime,
+			LOST_LOCATION AS lostLocation,
+			LOOK_LIKE AS lookLike,
+			CONTENT_PATH AS contentPath,
+			POSTING_START AS postingStart,
+			POSTING_END AS postingEnd,
+			END_YN  AS endYn,
+			CREATE_DATE AS createDate,
+			UPDATE_DATE AS updateDate
+		FROM TB_MISSING_PEOPLE
+		WHERE ID = #{id}
+	</select>
+	<select id="selectTotalMissingManagerList" parameterType="missingPeopleManagerVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(ID) AS totalCount 
+			FROM TB_MISSING_PEOPLE
+			WHERE 1=1
+		<if test="startDate != null  and  !startDate.equals('')">
+			AND ( 
+				(POSTING_START <![CDATA[ >= ]]>  #{startDate} AND POSTING_START <![CDATA[ <= ]]>  #{endDate})
+				OR (POSTING_END <![CDATA[ >= ]]>  #{startDate} AND POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (POSTING_START <![CDATA[ >= ]]>  #{startDate} AND POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (POSTING_START <![CDATA[ <= ]]>  #{startDate} AND POSTING_END <![CDATA[ >= ]]>  #{endDate})
+				)
+		</if>	
+	</select>
+	<select id="selectAnnounceContsLocationList" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT 
+			B.ORGAN_ID AS organId,
+			B.NAME AS name
+		FROM TB_CONTS_CLIENTS A
+		LEFT JOIN TB_ORGANIZATION B
+		ON A.ORGAN_ID = B.ORGAN_ID
+		WHERE A.BOARD_TYPE = '001'
+		AND A.CONTENT_ID = #{contentId}
+		ORDER BY A.ORGAN_ID ASC
+	</select>
+	<select id="selectMissingConnectList" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+		SELECT 
+			MISSING_ID AS missingId,
+			TITLE AS title,
+			TEL_NUM  AS telNum
+		FROM TB_MISSING_PEOPLE_CONNECT
+		WHERE MISSING_ID = #{id}
+		ORDER BY TITLE ASC
+	</select>
+	
+	<insert id="saveMissingBoardInfo" parameterType="missingPeopleReqInfoVO" useGeneratedKeys="true"
+				    keyProperty="id">
+		INSERT INTO TB_MISSING_PEOPLE
+		(
+			PHOTO_NAME,
+			ORIGIN_FILE,
+			GENDER,
+			NAME,
+			AGE,
+			LOST_TYPE,
+			LOST_TIME,
+			LOST_LOCATION,
+			LOOK_LIKE,
+			CONTENT_PATH,
+			POSTING_START,
+			POSTING_END,
+			END_YN
+		)
+		VALUES
+		(
+			#{photoName},
+			#{originFile},
+			#{gender},
+			#{name},
+			#{age},
+			#{lostType},
+			#{lostTime},
+			#{lostLocation},
+			#{lookLike},
+			#{contentPath},
+			#{postingStart},
+			#{postingEnd},
+			#{endYn}
+		)
+	</insert>
+
+	<update id="updateMissingBoardInfo" parameterType="missingPeopleReqInfoVO">
+		UPDATE TB_MISSING_PEOPLE
+		SET			
+			GENDER = #{gender},
+			NAME = #{name},
+			AGE = #{age},
+			LOST_TYPE = #{lostType},
+			LOST_TIME = #{lostTime},
+			LOST_LOCATION = #{lostLocation},
+			LOOK_LIKE = #{lookLike},
+			POSTING_START = #{postingStart},
+			POSTING_END = #{postingEnd},
+			END_YN = #{endYn},
+			UPDATE_DATE = NOW()
+			<if test="originFile != null  and  !originFile.equals('')">
+			,PHOTO_NAME = #{photoName}
+			,ORIGIN_FILE = #{originFile}
+			,CONTENT_PATH = #{contentPath}
+			</if>
+		WHERE ID = #{id}
+	</update>
+	
+	<delete id="deleteMissingBoardList" parameterType="java.util.List">
+			DELETE FROM TB_MISSING_PEOPLE WHERE
+			<foreach item="item" index="index" collection="list" open="ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<delete id="deleteMissingConnectList" parameterType="java.util.List">
+			DELETE FROM TB_MISSING_PEOPLE_CONNECT WHERE
+			<foreach item="item" index="index" collection="list" open="MISSING_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>	
+	
+	
+	<delete id="deleteMissingConnectInfo" parameterType="missingPeopleReqInfoVO">
+			DELETE FROM TB_MISSING_PEOPLE_CONNECT
+			WHERE MISSING_ID = #{id}
+	</delete>
+	
+	<insert id="saveMissingConnectInfo" parameterType="missingPeopleReqInfoVO">
+		INSERT INTO TB_MISSING_PEOPLE_CONNECT (
+			MISSING_ID,
+			TITLE,
+			TEL_NUM
+		) VALUES
+		<foreach collection="connects" item="element" index="index" open="(" separator="),("  close=")">
+			#{id},
+			#{element.title},
+			#{element.telNum}
+		</foreach>
+	</insert>
+	
+	
+	<delete id="deleteEmergencyBoardImage" parameterType="promoBoardVO">
+		SELECT 
+			SERVER_IP AS serverIp
+		FROM TB_SVR_MST
+		WHERE 1=1
+		<if test="serverType != null  and  !serverType.equals('')">
+			AND SERVER_TYPE = #{serverType}
+		</if>
+		<if test="useYn != null  and  !useYn.equals('')">
+			AND USE_YN = #{useYn}
+		</if>
+		GROUP BY SERVER_IP
+		ORDER BY SERVER_IP ASC
+	</delete>
+	
+	<select id="selectNextSeqMissing" resultType="java.lang.Integer">
+		SELECT IFNULL(AUTO_INCREMENT,1) FROM information_schema.tables where table_name='TB_MISSING_PEOPLE'
+	</select>
+</mapper>

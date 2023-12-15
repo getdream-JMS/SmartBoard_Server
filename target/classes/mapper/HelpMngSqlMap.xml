@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="helInfoMng">
+<!-- Mapping of all attributes of Connect -->
+    <resultMap id="ConnectResultMap" type="java.util.HashMap">
+        <id column="SOLUTION_ID" property="solutionId"></id>
+        <result column="TEL" property="tel"></result>
+	<result column="EMAIL" property="email"></result>
+    </resultMap>
+ <!--The mapping of basic attributes of help Info (excluding object attributes)-->
+    <resultMap id="HelpBasicInfoResultMap" type="helpInfoVO">
+        <id column="SOLUTION_ID" property="solutionId"></id>
+        <result column="PRODUCT" property="product"></result>
+	    <result column="VERSION" property="version"></result>
+	    <result column="COMP_VERSION_SERVER" property="compVersionServer"></result>
+	    <result column="COMP_VERSION_CLIENT" property="compVersionClient"></result>
+	    <result column="COMPANY_NAME" property="companyName"></result>
+	    <result column="COMPANY_ADDRESS" property="companyAddress"></result>
+	    <result column="COMPANY_RIGHTS" property="companyRights"></result>
+	    <result column="COMPANY_ID" property="companyId"></result>
+    </resultMap>
+ <!--Nested result-->
+    <resultMap id="HelpInfoResultMap" type="java.util.HashMap" extends="HelpBasicInfoResultMap">
+                 <!--Basic attributes are obtained through extends-->
+        <association property="connect" javaType="java.util.HashMap">
+            <result property="tel" column="TEL"></result>
+	        <result property="email" column="EMAIL"></result>
+        </association>
+    </resultMap>
+   <!--If the mapping of a certain column is not written in the result, then this column defaults to the default value of its own data type-->
+    <select id="selectHelpInfo" resultMap="HelpInfoResultMap">
+        select 
+        	s.SOLUTION_ID,
+		    s.PRODUCT,
+		    s.VERSION,
+		    s.COMP_VERSION_SERVER,
+			s.COMP_VERSION_CLIENT,
+			s.COMPANY_NAME,
+			s.COMPANY_ADDRESS,
+			s.COMPANY_RIGHTS,
+			s.COMPANY_ID,
+		    a.TEL,
+		    a.EMAIL
+        FROM TB_SOLUTION_INFO s , TB_SOLUTION_INFO a
+        WHERE s.SOLUTION_ID=a.SOLUTION_ID
+    </select>  
+    
+	<select id="selectHelpInfo1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			SOLUTION_ID,
+		    PRODUCT,
+		    VERSION,
+		    COMP_VERSION_SERVER,
+			COMP_VERSION_CLIENT,
+			COMPANY_NAME,
+			COMPANY_ADDRESS,
+			COMPANY_RIGHTS,
+			COMPANY_ID,
+		    TEL,
+		    EMAIL,
+		    DESCRIPTION
+		FROM TB_SOLUTION_INFO
+	</select>	
+</mapper>

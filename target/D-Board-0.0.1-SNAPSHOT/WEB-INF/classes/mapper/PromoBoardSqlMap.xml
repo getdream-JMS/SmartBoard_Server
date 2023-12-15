@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="promoBoard">
+	<resultMap id="promoImagesMap" type="promoBoardResultVO">
+	   <result property="contentId" column="contentId"/>
+	   <result property="title" column="title"/>
+	   <result property="organId" column="organId"/>
+	   <result property="contentName" column="contentName"/>
+	   <result property="contentPath" column="contentPath"/>	   
+	   <result property="postingStart" column="postingStart"/>
+	   <result property="postingEnd" column="postingEnd"/>
+	   <result property="contentInfo" column="contentInfo"/>
+	   <result property="repeatType" column="repeatType"/>
+	   <result property="delExpired" column="delExpired"/>
+	   <result property="tags" column="tags"/>
+	   <result property="contentType" column="contentType"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="updateDate" column="updateDate"/>
+	   <result property="totalCount" column="totalCount"/>
+	   <result property="originFile" column="originFile"/>
+	   <result property="layoutType" column="layoutType"/>
+	    <result property="urgentYn" column="urgentYn"/>
+	    <result property="remainDay" column="remainDay"/>
+	    <result property="useMain" column="useMain"/>
+	   <collection property="client" column="contentId" ofType= "java.lang.String" select="selectPromoContsLocationList">
+	   </collection>
+	   
+	</resultMap>
+
+	<select id="selectPromoBoardList" parameterType="promoBoardVO" resultMap="promoImagesMap">
+		SELECT A.* FROM(
+			SELECT 
+				CONTENT_ID AS contentId,
+				TITLE AS title,
+				ORGAN_ID AS organId,
+				CONTENT_PATH AS contentPath,
+				CONTENT_NAME AS contentName,
+				SUBSTRING(POSTING_START,1,8)  AS postingStart,
+				SUBSTRING(POSTING_END,1,8)  AS postingEnd,
+				CONTENT_INFO AS contentInfo,
+				REPEAT_TYPE AS repeatType,
+				DEL_EXPIRED AS delExpired,
+				TAGS AS tags,
+				CONTENT_TYPE AS contentType,
+				CREATE_DATE AS createDate,
+				UPDATE_DATE AS updateDate,
+				PUBLISHER AS publisher,
+				ORIGIN_FILE AS originFile,
+				LAYOUT_TYPE AS layoutType,
+				URGENT_YN AS urgentYn,
+				DATEDIFF(POSTING_END, DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')) AS remainDay,
+				USE_MAIN AS useMain
+			FROM TB_PROMO_CONTS
+			WHERE 1=1
+				<if test="searchContentType != null  and  searchContentType.size != 0">
+				AND CONTENT_TYPE IN
+				<foreach item="item" collection="searchContentType" separator="," open="(" close=")">#{item}</foreach>
+				</if>
+				<if test="searchContentType == null">
+				AND CONTENT_TYPE = '000'				
+				</if>
+				
+			<if test="startDate != null  and  !startDate.equals('')">
+				AND ( 
+					(POSTING_START <![CDATA[ >= ]]>  #{startDate} AND POSTING_START <![CDATA[ <= ]]>  #{endDate})
+					OR (POSTING_END <![CDATA[ >= ]]>  #{startDate} AND POSTING_END <![CDATA[ <= ]]>  #{endDate})
+					OR (POSTING_START <![CDATA[ >= ]]>  #{startDate} AND POSTING_END <![CDATA[ <= ]]>  #{endDate})
+					OR (POSTING_START <![CDATA[ <= ]]>  #{startDate} AND POSTING_END <![CDATA[ >= ]]>  #{endDate})
+					)
+			</if>	
+			<if test="tags != null  and  !tags.equals('')">
+				AND TAGS LIKE CONCAT('%',#{tags},'%')
+			</if>
+			<if test="title != null  and  !title.equals('')">
+				AND TITLE LIKE CONCAT('%',#{title},'%')
+			</if>
+		) A
+		<if test="sortingCol != null  and  !sortingCol.equals('')">
+		ORDER BY CONCAT('A.',${sortingCol}) ${sortingType}
+		</if>
+		<if test="sortingCol == null  or  sortingCol.equals('')">
+		ORDER BY A.createDate DESC
+		</if>
+		LIMIT #{startRowNum}, #{pageCount}
+	</select>	
+	
+	<select id="selectPromoBoardInfo" parameterType="promoBoardVO" resultMap="promoImagesMap">
+		SELECT 
+			CONTENT_ID AS contentId,
+			TITLE AS title,
+			ORGAN_ID AS organId,
+			CONTENT_PATH AS contentPath,
+			CONTENT_NAME AS contentName,
+			SUBSTRING(POSTING_START,1,8)  AS postingStart,
+			SUBSTRING(POSTING_END,1,8)  AS postingEnd,
+			CONTENT_INFO AS contentInfo,
+			REPEAT_TYPE AS repeatType,
+			DEL_EXPIRED AS delExpired,
+			TAGS AS tags,
+			CONTENT_TYPE AS contentType,
+			CREATE_DATE AS createDate,
+			UPDATE_DATE AS updateDate,
+			PUBLISHER AS publisher,
+			INTERVAL_TIME AS intervalTime,
+			ORIGIN_FILE AS originFile,
+			LAYOUT_TYPE AS layoutType,
+			URGENT_YN AS urgentYn,
+			USE_MAIN AS useMain
+		FROM TB_PROMO_CONTS
+		WHERE CONTENT_ID = #{contentId}
+	</select>
+	<select id="selectTotalPromoBoardList" parameterType="promoBoardVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(CONTENT_ID) AS totalCount 
+			FROM TB_PROMO_CONTS
+			WHERE 1=1
+			<if test="searchContentType != null  and  searchContentType.size != 0">
+				AND CONTENT_TYPE IN
+				<foreach item="item" collection="searchContentType" separator="," open="(" close=")">#{item}</foreach>
+			</if>
+			<if test="searchContentType == null">
+				AND CONTENT_TYPE = '000'				
+			</if>
+		<if test="startDate != null  and  !startDate.equals('')">
+			AND ( 
+				(POSTING_START <![CDATA[ >= ]]>  #{startDate} AND POSTING_START <![CDATA[ <= ]]>  #{endDate})
+				OR (POSTING_END <![CDATA[ >= ]]>  #{startDate} AND POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (POSTING_START <![CDATA[ >= ]]>  #{startDate} AND POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (POSTING_START <![CDATA[ <= ]]>  #{startDate} AND POSTING_END <![CDATA[ >= ]]>  #{endDate})
+				)
+		</if>	
+		<if test="tags != null  and  !tags.equals('')">
+			AND TAGS LIKE CONCAT('%',#{tags},'%')
+		</if>
+		<if test="title != null  and  !title.equals('')">
+			AND TITLE LIKE CONCAT('%',#{title},'%')
+		</if>
+		<if test='roleType != null  and  roleType.equals("P")'>
+			AND PUBLISHER = #{userId}
+		</if>
+	</select>
+	<select id="selectAnnounceContsLocationList" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT 
+			B.ORGAN_ID AS organId,
+			B.NAME AS name
+		FROM TB_CONTS_CLIENTS A
+		INNER JOIN TB_ORGANIZATION B
+		ON A.ORGAN_ID = B.ORGAN_ID
+		WHERE A.BOARD_TYPE = '001'
+		AND A.CONTENT_ID = #{contentId}
+		ORDER BY A.ORGAN_ID ASC
+	</select>
+	<select id="selectPromoContsLocationList" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT 
+			B.CLIENT_ID AS clientId,
+			B.CLIENT_NAME AS clientName
+		FROM TB_CONTS_CLIENTS A
+		INNER JOIN TB_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID
+		WHERE A.CONTENT_ID = #{contentId}
+				AND (A.BOARD_TYPE = '002' || A.BOARD_TYPE = '008')
+		ORDER BY A.CLIENT_ID ASC
+	</select>
+	
+	<insert id="savePromoBoardInfo" parameterType="promoBoardVO" useGeneratedKeys="true"
+				    keyProperty="contentId">
+		INSERT INTO TB_PROMO_CONTS (
+			TITLE,
+			ORGAN_ID,
+			CONTENT_PATH,
+			CONTENT_NAME,
+			POSTING_START,
+			POSTING_END,
+			CONTENT_INFO,
+			REPEAT_TYPE,
+			DEL_EXPIRED,
+			TAGS,
+			CONTENT_TYPE,
+			INTERVAL_TIME,
+			PUBLISHER,
+			ORIGIN_FILE,
+			LAYOUT_TYPE,
+			URGENT_YN,
+			USE_MAIN
+		) VALUES (
+			#{title},
+			#{organId},
+			#{contentPath},
+			#{contentName},
+			#{postingStart},
+			#{postingEnd},
+			#{contentInfo},
+			#{repeatType},
+			#{delExpired},
+			#{tags},
+			#{contentType},
+			#{intervalTime},
+			#{publisher},
+			#{originFile},
+			#{layoutType},
+			#{urgentYn},
+			#{useMain}
+		)
+
+	</insert>
+
+	<update id="updatePromoBoardInfo" parameterType="serverStatusVO">
+		UPDATE TB_PROMO_CONTS
+		SET
+			TITLE = #{title},
+			ORGAN_ID = #{organId},
+			<if test="contentPath != null  and  !contentPath.equals('')">
+			CONTENT_PATH = #{contentPath},
+			</if>
+			<if test="contentName != null  and  !contentName.equals('')">
+			CONTENT_NAME = #{contentName},
+			</if>
+			POSTING_START = #{postingStart},
+			POSTING_END = #{postingEnd},
+			CONTENT_INFO = #{contentInfo},
+			REPEAT_TYPE = #{repeatType},
+			DEL_EXPIRED = #{delExpired},
+			TAGS = #{tags},
+			CONTENT_TYPE = #{contentType},
+			INTERVAL_TIME = #{intervalTime},
+			<if test="publisher != null  and  !publisher.equals('')">
+			PUBLISHER = #{publisher},
+			</if>
+			<if test="originFile != null  and  !originFile.equals('')">
+			ORIGIN_FILE = #{originFile},
+			</if>
+			<if test="layoutType > -1">
+			LAYOUT_TYPE = #{layoutType},
+			</if>			
+			<if test="urgentYn != null  and  !urgentYn.equals('')">
+			URGENT_YN = #{urgentYn},
+			</if>
+			<if test="useMain != null  and  !useMain.equals('')">
+			USE_MAIN = #{useMain},
+			</if>
+			UPDATE_DATE = NOW()
+			
+		WHERE CONTENT_ID = #{contentId}
+	</update>
+	
+	<delete id="deletePromoBoardList" parameterType="java.util.List">
+			DELETE FROM TB_PROMO_CONTS WHERE
+			<foreach item="item" index="index" collection="list" open="CONTENT_ID IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+	</delete>
+	
+	<delete id="deletePromoBoardInfo" parameterType="announceBoardVO">
+			DELETE FROM TB_PROMO_CONTS
+			WHERE CONTENT_ID = #{contentId}
+	</delete>
+	
+	<delete id="deletePromoBoardImage" parameterType="promoBoardVO">
+		SELECT 
+			SERVER_IP AS serverIp
+		FROM TB_SVR_MST
+		WHERE 1=1
+		<if test="serverType != null  and  !serverType.equals('')">
+			AND SERVER_TYPE = #{serverType}
+		</if>
+		<if test="useYn != null  and  !useYn.equals('')">
+			AND USE_YN = #{useYn}
+		</if>
+		GROUP BY SERVER_IP
+		ORDER BY SERVER_IP ASC
+	</delete>
+	
+	<select id="selectNextSeqPromo" resultType="java.lang.Integer">
+		SELECT IFNULL(AUTO_INCREMENT,1) FROM information_schema.tables where table_name='tb_promo_conts'
+	</select>
+	
+	<select id="selectClientsByContent" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT DISTINCT A.CLIENT_ID 
+		FROM TB_CLIENTS A
+		<if test='roleType != "S"'>
+		INNER JOIN TB_USER_CLIENT B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.USER_ID = #{userId}
+		</if>
+		WHERE A.USE_YN = 'Y'
+		
+	</select>
+
+</mapper>

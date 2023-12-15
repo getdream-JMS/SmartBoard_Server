@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alarm>
+	<cpu>
+		<critical>81</critical>
+		<warning>51</warning>
+	</cpu>
+	<memory>
+		<critical>81</critical>
+		<warning>51</warning>
+	</memory>
+	<disk>
+		<critical>81</critical>
+		<warning>51</warning>
+	</disk>
+</alarm>

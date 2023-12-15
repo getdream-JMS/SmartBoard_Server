@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="systemMng">
+	<select id="selectStatisticContents" parameterType="contentInfoVO" resultType="java.util.HashMap">
+		SELECT 
+			COUNT(DISTINCT A.CONTENT_TYPE,A.CONTENT_ID) AS count,
+			A.CONTENT_TYPE AS contentType,
+            (SELECT CODE_INFO FROM TB_CODE WHERE CODE_GRP = '003' AND CODE = A.CONTENT_TYPE) AS contentTypeName
+
+		FROM (
+			(SELECT 
+					CONTENT_ID,
+                    CONTENT_TYPE,                    
+                    POSTING_START,
+                    POSTING_END
+				FROM TB_ANNOUNCE_CONTS
+			)
+				
+		UNION
+			(SELECT 
+					CONTENT_ID,
+                    CONTENT_TYPE,
+                    POSTING_START,
+                    POSTING_END
+				FROM TB_PROMO_CONTS
+                )
+			) A
+            INNER JOIN TB_CONTS_CLIENTS B
+            ON A.CONTENT_ID = B.CONTENT_ID
+          <!--    AND B.ORGAN_ID IN (SELECT ORGAN_ID FROM TB_USER_ORGAN WHERE USER_ID = #{userId})	-->
+			WHERE 1=1
+		   <if test="startDate != null  and  !startDate.equals('')">
+		    AND ( 
+				(A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_START <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_END <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_START <![CDATA[ <= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ >= ]]>  #{endDate})
+				)
+			</if>
+			GROUP BY A.CONTENT_TYPE
+            ORDER BY A.CONTENT_TYPE ASC
+	</select>
+	
+	<select id="selectTotalStatisticContents" parameterType="contentInfoVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(DISTINCT A.CONTENT_ID) AS totalCount
+		FROM (
+			(SELECT 
+					CONTENT_ID,
+                    CONTENT_TYPE,                    
+                    POSTING_START,
+                    POSTING_END
+				FROM TB_ANNOUNCE_CONTS
+			)
+				
+		UNION
+			(SELECT 
+					CONTENT_ID,
+                    CONTENT_TYPE,
+                    POSTING_START,
+                    POSTING_END
+				FROM TB_PROMO_CONTS
+                )
+			) A
+			
+			INNER JOIN TB_CONTS_CLIENTS B
+            ON A.CONTENT_ID = B.CONTENT_ID
+           <!-- AND B.ORGAN_ID IN (SELECT ORGAN_ID FROM TB_USER_ORGAN WHERE USER_ID = #{userId})-->
+		    WHERE 1=1		
+
+		   <if test="startDate != null  and  !startDate.equals('')">
+		    AND ( 
+				(A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_START <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_END <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_START <![CDATA[ <= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ >= ]]>  #{endDate})
+				)
+			</if>
+	</select>	
+</mapper>

@@ -1,0 +1,114 @@
+@font-face {
+    font-family: 'NanumGothic';
+    src: url('/fonts/NanumGothic.eot');
+    src: url('/fonts/NanumGothic.eot') format('embedded-opentype'),
+    url('/fonts/NanumGothic.woff') format('woff');
+}
+
+.app-header .nav-item .nav-link {
+    font-size : 1.2em;
+}
+
+body {
+    background-color: #1c2125;
+   /* font-family: 'NanumGothic';*/
+}
+
+.footer-addr {
+    font-size: 0.8rem;
+    color: gray;
+    word-spacing: 2px;
+}
+
+.page-link {
+    border-radius: 15px;
+    padding: 0.3rem 0.6rem;
+}
+
+.badge {
+    border: 1px solid #20a8d8;
+}
+
+a.page-link {
+    margin-right: 0.4em;
+}
+
+.sidebar .nav-link {
+    color: gray;
+}
+
+.btn-light {
+    color: #FFFFFF;
+    background-color: initial;
+    border-color: lightgray;
+}
+.btn-add {
+    border-radius: 15px;
+    padding: 0.15rem 0.6rem;
+    background-color:blue;
+    border-color: blue;
+}
+
+.btn-delete {
+    border-radius: 15px;
+    padding: 0.15rem 0.6rem;
+}
+
+.sidebar .nav-link.active {
+    color: #fff !important;
+    background: #3a4248;
+}
+
+.carousel-indicators li {
+    background-color:#20a8d8;
+}
+
+.card-header>i {
+    margin-right: .5rem;
+}
+#carouselContentIndicators{
+	height: 100%;
+}
+
+#carouselContentIndicators div{
+	height: inherit;
+}
+
+#carouselContentIndicators img{
+	margin-left: auto;
+    margin-right: auto;
+    height: 100% !important;
+}
+
+/*DashBoard*/
+.c-callout {
+    position: relative;
+    padding: 0 1rem;
+    margin: 1rem 0;
+    border-radius: .25rem;
+    border-left: 4px solid #d8dbe0;
+}
+.c-callout-info {
+    border-left-color: #4799eb;
+}
+
+.c-callout-danger {
+    border-left-color: #d16767;
+}
+.c-callout-warning {
+    border-left-color: #e1a82d;
+}
+.c-callout-success {
+    border-left-color: #45a164;
+}
+body {
+	overflow : hidden;
+}
+
+.carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23555' viewBox='0 0 8 8'%3e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3e%3c/svg%3e");
+}
+
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23555' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3e%3c/svg%3e");
+}

@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userMng">
+	<resultMap id="userInfoMap" type="userInfoVO">
+	   <result property="userId" column="userId"/>
+	   <result property="userPass" column="userPass"/>
+	   <result property="department" column="department"/>
+	   <result property="userName" column="userName"/>
+	   <result property="email" column="email"/>	   
+	   <result property="telNum" column="telNum"/>
+	   <result property="userInfo" column="userInfo"/>
+	   <result property="activeYn" column="activeYn"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="organId" column="organId"/>
+	   <result property="organName" column="organName"/>
+	   <result property="photoPath" column="photoPath"/>
+	   <collection property="roles" column="userId" ofType= "java.lang.String" select="selectUserRoleInfo"></collection>
+	   <collection property="clients" column="userId" ofType= "java.lang.String" select="selectUserClientInfo"></collection>
+	</resultMap>
+
+	<resultMap id="userReqInfoMap" type="organMemberInfoVO">
+	   <result property="reqId" column="reqId"/>
+	   <result property="userId" column="userId"/>
+	   <result property="userPass" column="userPass"/>
+	   <result property="userName" column="userName"/>
+	   <result property="email" column="email"/>	   
+	   <result property="telNum" column="telNum"/>
+	   <result property="phone" column="phone"/>
+	   <result property="position" column="position"/>
+	   <result property="duty" column="duty"/>
+	   <result property="organId" column="organId"/>
+	   <result property="organName" column="organName"/>
+	   <result property="photoPath" column="photoPath"/>
+	   <result property="createDate" column="createDate"/>
+	   <collection property="roles" column="userId" ofType= "java.lang.String" select="selectUserReqRoleInfo"></collection>
+	   <collection property="organs" column="userId" ofType= "java.lang.String" select="selectUserReqOrganInfo"></collection>
+	</resultMap>
+	
+	<select id="selectUserInfoList" parameterType="userInfoSearchVO" resultMap="userInfoMap">
+		SELECT * FROM (
+			SELECT 
+				A.USER_ID AS userId,
+			    A.USER_PASS AS userPass,
+			    A.DEPARTMENT AS department,
+			    A.USER_NAME AS userName,
+			    A.EMAIL AS email,
+			    A.TEL_NUM AS telNum,
+			    A.USER_INFO AS userInfo,
+			    A.ACTIVE_YN AS activeYn,
+			    A.CREATE_DATE  AS createDate,
+			    B.ORGAN_ID AS organId,
+			    B.NAME AS organName,
+			    A.PHOTO_PATH AS photoPath
+			FROM TB_USER_MST A
+			LEFT JOIN TB_ORGANIZATION B
+			ON A.ORGAN_ID = B.ORGAN_ID 
+			WHERE A.USER_ID != 'admin'
+			
+		) A
+		<if test="sortingCol != null  and  !sortingCol.equals('')">
+		ORDER BY CONCAT('A.',${sortingCol}) ${sortingType}
+		</if>
+		<if test="sortingCol == null  or  sortingCol.equals('')">
+		ORDER BY A.userName ASC
+		</if>
+		<if test="startRowNum != null  and  !startRowNum.equals('') and pageCount > 0">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>	
+	
+	<select id="selectTotalUserInfoCount"  resultType="java.lang.Integer">
+		SELECT 
+			COUNT( USER_ID ) AS totalCount
+		FROM TB_USER_MST
+	</select>
+	
+	<select id="selectUserInfo" parameterType="java.lang.String" resultMap="userInfoMap">
+		SELECT 
+			A.USER_ID AS userId,
+		    A.USER_PASS AS userPass,
+		    A.DEPARTMENT AS department,
+		    A.USER_NAME AS userName,
+		    A.EMAIL AS email,
+		    A.TEL_NUM AS telNum,
+		    A.USER_INFO AS userInfo,
+		    A.ACTIVE_YN AS activeYn,
+		    A.CREATE_DATE  AS createDate,
+		    B.ORGAN_ID AS organId,
+		    B.NAME AS organName,
+		    A.PHOTO_PATH AS photoPath
+		FROM TB_USER_MST A
+		LEFT JOIN TB_ORGANIZATION B
+		ON A.ORGAN_ID = B.ORGAN_ID 
+		WHERE A.USER_ID = #{value}
+		LIMIT 1
+	</select>	
+	<select id="selectUserRoleInfo" parameterType="java.lang.String" resultType="roleInfoVO">
+		SELECT 
+			C.ROLE_ID AS roleId,
+			C.ROLE_NAME AS roleName,
+			C.ROLE_TYPE AS roleType
+		FROM TB_USER_MST A
+		INNER JOIN TB_USER_ROLE B
+			ON A.USER_ID = B.USER_ID
+		LEFT JOIN TB_ROLE C
+			ON B.ROLE_ID = C.ROLE_ID
+		WHERE A.USER_ID = #{value}
+	</select>
+	<select id="selectUserClientInfo" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT 
+			A.CLIENT_ID AS clientId,
+			B.CLIENT_NAME AS clientName
+		FROM TB_USER_CLIENT A
+		INNER JOIN TB_CLIENTS B
+			ON A.CLIENT_ID = B.CLIENT_ID
+		WHERE A.USER_ID = #{value}
+	</select>
+	<insert id="saveUserInfo" parameterType="userInfoVO">
+		INSERT INTO TB_USER_MST(
+			USER_ID ,
+		    USER_PASS,
+		    ORGAN_ID,
+		    SABUN,
+		    USER_NAME,
+		    EMAIL,
+		    TEL_NUM,
+		    PHONE,
+		    USER_INFO,
+		    POSITION,
+		    ACTIVE_YN,
+		    PHOTO_PATH,
+		    DUTY,
+		    SEQ,
+		    DISPLAY
+		) VALUES (
+			#{userId},
+			<if test="userPass != null  and  !userPass.equals('')">
+			MD5(#{userPass}),
+			</if>
+			<if test="userPass == null  or  userPass.equals('')">
+				(SELECT USER_PASS FROM TB_DEPARTMENT_MEMBER WHERE USER_ID = #{userId}),
+			</if>
+			#{organId},
+			#{sabun},
+			#{userName},
+			#{email},
+			#{telNum},
+			#{phone},
+			#{userInfo},
+			#{position},
+			'Y',
+			#{photoPath},
+			#{duty},
+			#{seq},
+			#{display}
+		)
+
+	</insert>
+	
+	<update id="updateUserInfo" parameterType="userInfoVO">
+		UPDATE TB_USER_MST
+		SET
+			<if test="userPass != null  and  !userPass.equals('')">
+			USER_PASS = MD5(#{userPass}),
+			</if>
+		    DEPARTMENT = #{department},
+		    USER_NAME = #{userName},
+		    EMAIL = #{email},
+		    TEL_NUM = #{telNum},
+		    USER_INFO = #{userInfo},
+		    ACTIVE_YN = #{activeYn},
+		    ORGAN_ID = #{organId}
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<insert id="saveUserRoleInfo" parameterType="userInfoVO">
+		INSERT INTO TB_USER_ROLE (
+			USER_ID,
+			ROLE_ID	
+		) VALUES 
+		<foreach collection="roles" item="item" index="index" open="(" separator="),("  close=")">
+			#{userId},
+			#{item.roleId}
+		</foreach>
+	</insert>	
+	
+	<insert id="saveUserOrganInfo" parameterType="userInfoVO">
+		INSERT INTO TB_USER_ORGAN (
+			USER_ID,
+			ORGAN_ID	
+		) VALUES 
+		<foreach collection="organs" item="item" index="index" open="(" separator="),("  close=")">
+			#{userId},
+			#{item.organId}
+		</foreach>
+	</insert>	
+	
+	<insert id="saveCustomUserReq" parameterType="userReqInfoVO" useGeneratedKeys="true"
+				    keyProperty="reqId" keyColumn="reqId">
+		INSERT INTO TB_REQ_USER (
+			USER_ID,
+		    USER_PASS,
+		    SABUN,
+		    DEPARTMENT,
+		    USER_NAME,
+		    EMAIL,
+		    USER_INFO,
+		    ACTIVE_YN,
+		    ORGAN_ID	    
+		) VALUES (
+			#{userId},
+			#{userPass},
+			#{department},
+			#{userName},
+			#{email},
+			#{telNum},
+			#{userInfo},
+			#{activeYn},
+			#{organId}
+		)
+
+	</insert>
+	
+	<insert id="saveUserReq" parameterType="userReqInfoVO" useGeneratedKeys="true"
+				    keyProperty="reqId" keyColumn="reqId">
+		INSERT INTO TB_REQ_USER (
+			USER_ID,
+		    USER_PASS,
+		    SABUN
+   
+		) VALUES (
+			#{userId},
+			MD5(#{userId}),
+			#{userId}
+		)
+	</insert>	
+	
+	<insert id="saveUserRoleReq" parameterType="userReqInfoVO">
+		INSERT INTO TB_REQ_ROLE (
+			REQ_ID,
+			ROLE_ID	
+		) VALUES 
+		<foreach collection="roles" item="item" index="index" open="(" separator="),("  close=")">
+			#{reqId},
+			#{item}
+		</foreach>
+	</insert>	
+	
+	<insert id="saveUserOrganReq" parameterType="userReqInfoVO">
+		INSERT INTO TB_REQ_ORGAN (
+			REQ_ID,
+			ORGAN_ID	
+		) VALUES 
+		<foreach collection="organs" item="item" index="index" open="(" separator="),("  close=")">
+			#{reqId},
+			#{item}
+		</foreach>
+	</insert>	
+	
+	<delete id="deleteUserReq" parameterType="userReqInfoVO">
+			DELETE FROM TB_REQ_USER
+			WHERE REQ_ID = #{reqId}
+	</delete>
+	
+	<delete id="deleteUserRoleReq" parameterType="userReqInfoVO">
+			DELETE FROM TB_REQ_ROLE
+			WHERE REQ_ID = #{reqId}
+	</delete>
+	
+	<delete id="deleteUserOrganReq" parameterType="userReqInfoVO">
+			DELETE FROM TB_REQ_ORGAN
+			WHERE REQ_ID = #{reqId}
+	</delete>
+	<update id="updateUserReq" parameterType="userReqInfoVO">
+		UPDATE TB_REQ_USER
+		SET
+			IS_ACCEPT = #{isAccept},			
+			UPDATE_DATE = NOW()			
+		WHERE REQ_ID = #{reqId}
+	</update>
+	
+	<insert id="saveReqUserInfo" parameterType="userReqInfoVO">
+		INSERT INTO TB_USER_MST (
+			USER_ID,
+		    USER_PASS,
+		    SABUN,
+		    ORGAN_ID,
+		    USER_NAME,
+		    EMAIL,
+		    PHOTO_PATH,
+		    TEL_NUM,
+		    PHONE,
+		    COMPANY,
+		    DUTY,
+		    POSITION,
+		    APP_NO,
+		    SEQ,		    
+		    DISPLAY,
+		    ACTIVE_YN
+	    
+		) SELECT
+			B.USER_ID,
+		    A.USER_PASS,
+		    B.USER_ID,
+		    B.ORGAN_ID,
+		    B.USER_NAME,
+		    B.EMAIL,
+		    B.PHOTO_PATH,
+		    B.TEL_NUM,
+		    B.PHONE,
+		    B.COMPANY,
+		    B.DUTY,
+		    B.POSITION,
+		    B.APP_NO,
+		    B.SEQ,
+		    B.DISPLAY, 
+		    'Y'
+		 	FROM TB_REQ_USER A
+		 	LEFT JOIN TB_DEPARTMENT_MEMBER B
+		 	ON A.USER_ID = B.USER_ID
+		 	WHERE A.REQ_ID = #{reqId}
+	</insert>
+	
+	
+	
+	<insert id="saveReqUserRoleInfo" parameterType="userReqInfoVO">
+		INSERT INTO TB_USER_ROLE (
+			USER_ID,
+		    ROLE_ID
+	    
+		) SELECT
+			A.USER_ID,
+		    B.ROLE_ID		  
+		 	FROM TB_REQ_USER A
+		 	INNER JOIN TB_REQ_ROLE B
+		 	ON A.REQ_ID = B.REQ_ID
+		 	WHERE A.REQ_ID = #{reqId}
+	</insert>
+	
+	<insert id="saveReqUserOrganInfo" parameterType="userReqInfoVO">
+		INSERT INTO TB_USER_ORGAN (
+			USER_ID,
+			ORGAN_ID	
+		) SELECT
+			A.USER_ID,
+		    B.ORGAN_ID		  
+		 	FROM TB_REQ_USER A
+		 	INNER JOIN TB_REQ_ORGAN B
+		 	ON A.REQ_ID = B.REQ_ID AND B.ORGAN_ID IS NOT NULL
+		 	WHERE A.REQ_ID = #{reqId}
+	</insert>	
+	
+	<delete id="deleteUserRoleInfo" parameterType="userInfoVO">
+			DELETE FROM TB_USER_ROLE
+			WHERE USER_ID = #{userId}
+	</delete>
+	
+	<delete id="deleteUserOrganInfo" parameterType="userInfoVO">
+			DELETE FROM TB_USER_ORGAN
+			WHERE USER_ID = #{userId}
+	</delete>
+	
+	<delete id="deleteUserInfo" parameterType="userInfoVO">
+			DELETE FROM TB_USER_MST
+			WHERE USER_ID = #{userId}
+	</delete>
+	
+	<select id="selectUserInfoReqList" parameterType="userInfoSearchVO" resultMap="userReqInfoMap">
+		SELECT 
+			A.REQ_ID AS reqId,
+			B.USER_ID AS userId,
+		    B.USER_PASS AS userPass,
+		    B.USER_NAME AS userName,
+		    B.EMAIL AS email,
+		    B.TEL_NUM AS telNum,
+            B.PHONE AS phone,
+		    B.POSITION AS position,
+		    B.DUTY AS duty,
+		    B.CREATE_DATE  AS createDate,
+		    B.ORGAN_ID AS organId,		   
+		    B.PHOTO_PATH AS photoPath,
+            C.NAME AS organName
+		FROM TB_REQ_USER A
+		INNER JOIN TB_DEPARTMENT_MEMBER B
+		ON A.USER_ID = B.USER_ID AND A.IS_ACCEPT = 'N'
+        LEFT JOIN TB_ORGANIZATION C
+        ON B.ORGAN_ID = C.ORGAN_ID
+		<if test="startRowNum != null  and  !startRowNum.equals('') and pageCount > 0">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>	
+	
+	<select id="selectTotalUserInfoReqList"  resultType="java.lang.Integer">
+		SELECT 
+			COUNT( USER_ID ) AS totalCount
+		FROM TB_REQ_USER
+		WHERE IS_ACCEPT = 'N'
+	</select>
+	
+	<select id="selectUserInfoReqInfo" parameterType="userReqInfoVO" resultMap="userReqInfoMap">
+		SELECT 
+			IFNULL(B.IS_ACCEPT,'') AS isAccept,
+			B.REQ_ID AS reqId,
+			A.USER_ID AS userId,
+		    A.USER_PASS AS userPass,
+		    A.USER_NAME AS userName,
+		    A.EMAIL AS email,
+		    A.TEL_NUM AS telNum,
+            A.PHONE AS phone,
+		    A.POSITION AS position,
+		    A.DUTY AS duty,
+		    B.CREATE_DATE  AS createDate,
+		    A.ORGAN_ID AS organId,		   
+		    A.PHOTO_PATH AS photoPath,
+            C.NAME AS organName
+		FROM TB_DEPARTMENT_MEMBER A
+		LEFT JOIN TB_REQ_USER B
+		ON A.USER_ID = B.USER_ID
+        LEFT JOIN TB_ORGANIZATION C
+        ON A.ORGAN_ID = C.ORGAN_ID
+        WHERE A.USER_ID = #{userId}
+        ORDER BY B.CREATE_DATE DESC
+        LIMIT 1
+	</select>
+	<select id="selectUserReqRoleInfo" parameterType="java.lang.String" resultType="roleInfoVO">
+		SELECT 
+			C.ROLE_ID AS roleId,
+			C.ROLE_NAME AS roleName
+		FROM TB_REQ_USER A
+		LEFT JOIN TB_REQ_ROLE B
+			ON A.REQ_ID = B.REQ_ID
+		INNER JOIN TB_ROLE C
+			ON B.ROLE_ID = C.ROLE_ID
+		WHERE A.USER_ID = #{value}
+	</select>
+	<select id="selectUserReqOrganInfo" parameterType="java.lang.String" resultType="java.util.HashMap">
+		 SELECT 
+			C.ORGAN_ID AS organId,
+			C.NAME AS organName
+		FROM TB_REQ_USER A
+        LEFT JOIN TB_REQ_ORGAN B
+			ON A.REQ_ID = B.REQ_ID
+		LEFT JOIN TB_ORGANIZATION C
+			ON B.ORGAN_ID = C.ORGAN_ID
+		WHERE A.USER_ID = #{value}
+	</select>
+	
+		<insert id="saveUserClientInfo" parameterType="userInfoVO">
+		INSERT INTO TB_USER_CLIENT (
+			USER_ID,
+			CLIENT_ID	
+		) VALUES 
+		<foreach collection="clients" item="item" index="index" open="(" separator="),("  close=")">
+			#{userId},
+			#{item.clientId}
+		</foreach>
+	</insert>
+	<delete id="deleteUserClientInfo" parameterType="userInfoVO">
+			DELETE FROM TB_USER_CLIENT
+			WHERE USER_ID = #{userId}
+	</delete>
+	
+	<delete id="deleteUserReqByUserId" parameterType="userInfoVO">
+			DELETE FROM TB_REQ_USER
+			WHERE USER_ID = #{userId}
+	</delete>
+	
+	<delete id="deleteUserRoleReqByUserId" parameterType="userInfoVO">
+			DELETE FROM TB_REQ_ROLE
+			WHERE REQ_ID = (SELECT REQ_ID FROM TB_REQ_USER WHERE USER_ID = #{userId} LIMIT 1)
+	</delete>
+	
+	<delete id="deleteUserOrganReqByUserId" parameterType="userInfoVO">
+			DELETE FROM TB_REQ_ORGAN
+			WHERE REQ_ID = (SELECT REQ_ID FROM TB_REQ_USER WHERE USER_ID = #{userId} LIMIT 1)
+	</delete>
+	
+</mapper>

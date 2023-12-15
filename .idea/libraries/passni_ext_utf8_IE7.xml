@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="passni_ext_utf8_IE7">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../lib/passni_ext_utf8_IE7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,1037 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="contentManage">
+	<resultMap id="contentInfoMap" type="java.util.HashMap">
+	   <result property="contentId" column="contentId"/>
+	   <result property="title" column="title"/>
+	   <result property="organId" column="organId"/>
+	   <result property="contentName" column="contentName"/>
+	   <result property="contentPath" column="contentPath"/>	   
+	   <result property="postingStart" column="postingStart"/>
+	   <result property="postingEnd" column="postingEnd"/>
+	   <result property="contentInfo" column="contentInfo"/>
+	   <result property="repeatType" column="repeatType"/>
+	   <result property="priority" column="priority"/>
+	   <result property="highlightYn" column="highlightYn"/>
+	   <result property="delExpired" column="delExpired"/>
+	   <result property="tags" column="tags"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="updateDate" column="updateDate"/>
+	   <result property="totalCount" column="totalCount"/>
+	   <result property="publisher" column="publisher"/>
+	   <result property="remainDay" column="remainDay"/>
+	   <result property="contentType" column="contentType"/>
+	   <result property="contentTypeName" column="contentTypeName"/>
+	    <collection property="contents" column="contentId" ofType= "java.lang.String" select="selectAnnounceImageList">
+	   </collection>
+	   <collection property="location" column="{contentId = contentId,contentType = contentType}" ofType= "java.lang.String" select="selectContentsLocationList">
+	   </collection>
+	</resultMap>
+	
+	<resultMap id="promoBoardDataMap" type="java.util.HashMap">
+	   <result property="contentTypeCount" column="contentTypeCount"/>
+	   <result property="imageCode" column="imageCode"/>
+	   <result property="movCode" column="movCode"/>
+	   <result property="subCode" column="subCode"/>
+	   <result property="urlCode" column="urlCode"/>
+	   <result property="ntcCode" column="ntcCode"/>
+	   <result property="clientId" column="clientId"/>
+	   <result property="curDate" column="curDate"/>
+	   <result property="boardIndex" column="boardIndex"/>
+	   <result property="templateType" column="templateType"/>
+	   <result property="urgentYn" column="urgentYn"/>
+	   <collection property="img" column="{ clientId = clientId, boardType = boardType, contentType = imageCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectPromoBoardList">
+	   </collection>
+	   <collection property="mov" column="{ clientId = clientId,  boardType = boardType, contentType = movCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectPromoBoardList">
+	   </collection>
+	   <collection property="sub" column="{ clientId = clientId,  boardType = boardType, contentType = subCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectPromoBoardList">
+	   </collection>
+	   <collection property="url" column="{ clientId = clientId,  boardType = boardType, contentType = urlCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectPromoBoardList">
+	   </collection>
+	   <collection property="ntc" column="{ clientId = clientId,  boardType = boardType, contentType = ntcCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectPromoBoardList">
+	   </collection>
+	   <collection property="all" column="{ clientId = clientId,  boardType = boardType, contentType = ntcCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectPromoBoardListAll">
+	   </collection>
+	</resultMap>
+	
+	<resultMap id="mainBoardDataMap" type="java.util.HashMap">
+	   <result property="contentTypeCount" column="contentTypeCount"/>
+	   <result property="imageCode" column="imageCode"/>
+	   <result property="movCode" column="movCode"/>
+	   <result property="subCode" column="subCode"/>
+	   <result property="urlCode" column="urlCode"/>
+	   <result property="ntcCode" column="ntcCode"/>
+	   <result property="clientId" column="clientId"/>
+	   <result property="curDate" column="curDate"/>
+	   <result property="boardIndex" column="boardIndex"/>
+	   <result property="templateType" column="templateType"/>
+	   <result property="urgentYn" column="urgentYn"/>
+	   <collection property="img" column="{ clientId = clientId, contentType = imageCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectMainBoardData">
+	   </collection>
+	   <collection property="mov" column="{ clientId = clientId, contentType = movCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectMainBoardData">
+	   </collection>
+	   <collection property="sub" column="{ clientId = clientId, contentType = subCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectMainBoardData">
+	   </collection>
+	   <collection property="url" column="{ clientId = clientId, contentType = urlCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectMainBoardData">
+	   </collection>
+	   <collection property="ntc" column="{ clientId = clientId, contentType = ntcCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum}" ofType= "java.util.HashMap" select="selectMainBoardData">
+	   </collection>
+	   
+	</resultMap>
+	
+	<resultMap id="newsLetterInfoMap" type="java.util.HashMap">
+	   <result property="contentId" column="contentId"/>
+	   <result property="title" column="title"/>
+	   <result property="organId" column="organId"/>
+	   <result property="contentName" column="contentName"/>
+	   <result property="contentPath" column="contentPath"/>	   
+	   <result property="postingStart" column="postingStart"/>
+	   <result property="postingEnd" column="postingEnd"/>
+	   <result property="contentInfo" column="contentInfo"/>
+	   <result property="repeatType" column="repeatType"/>
+	   <result property="priority" column="priority"/>
+	   <result property="highlightYn" column="highlightYn"/>
+	   <result property="delExpired" column="delExpired"/>
+	   <result property="tags" column="tags"/>
+	   <result property="createDate" column="createDate"/>
+	   <result property="updateDate" column="updateDate"/>
+	   <result property="totalCount" column="totalCount"/>
+	   <result property="publisher" column="publisher"/>
+	   <result property="remainDay" column="remainDay"/>
+	   <result property="contentType" column="contentType"/>
+	   <result property="contentTypeName" column="contentTypeName"/>
+	   <result property="curDate" column="curDate"/>
+	   <result property="fileName" column="fileName"/>
+	    <!-- collection property="contents" column="{contentId = contentId, curDate = curDate}" ofType= "java.lang.String" select="selectNewsletterImageList">
+	   </collection -->
+	   <collection property="location" column="{contentId = contentId,contentType = contentType}" ofType= "java.lang.String" select="selectContentsLocationList">
+	   </collection>
+	   
+	</resultMap>
+	
+	<resultMap id="juminBoardDataMap" type="java.util.HashMap">
+	   <result property="contentTypeCount" column="contentTypeCount"/>
+	   <result property="imageCode" column="imageCode"/>
+	   <result property="movCode" column="movCode"/>
+	   <result property="subCode" column="subCode"/>
+	   <result property="urlCode" column="urlCode"/>
+	   <result property="ntcCode" column="ntcCode"/>
+	   <result property="clientId" column="clientId"/>
+	   <result property="curDate" column="curDate"/>
+	   <result property="boardIndex" column="boardIndex"/>
+	   <result property="templateType" column="templateType"/>
+	   <result property="urgentYn" column="urgentYn"/>
+	   <collection property="img" column="{ clientId = clientId, contentType = imageCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum, boardType = boardType}" ofType= "java.util.HashMap" select="selectJuminBoardList">
+	   </collection>
+	   <collection property="mov" column="{ clientId = clientId, contentType = movCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum, boardType = boardType}" ofType= "java.util.HashMap" select="selectJuminBoardList">
+	   </collection>
+	   <collection property="sub" column="{ clientId = clientId, contentType = subCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum, boardType = boardType}" ofType= "java.util.HashMap" select="selectJuminBoardList">
+	   </collection>
+	   <collection property="url" column="{ clientId = clientId, contentType = urlCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum, boardType = boardType}" ofType= "java.util.HashMap" select="selectJuminBoardList">
+	   </collection>
+	   <collection property="ntc" column="{ clientId = clientId, contentType = ntcCode, curDate = curDate, boardIndex = boardIndex, templateType = templateType,urgentYn = urgentYn, pageCount = pageCount, startRowNum = startRowNum, boardType = boardType}" ofType= "java.util.HashMap" select="selectJuminBoardList">
+	   </collection>
+	</resultMap>
+	<delete id="deleteContClients" parameterType="java.util.HashMap">
+		DELETE FROM TB_CONTS_CLIENTS
+		WHERE CONTENT_ID = #{contentId}
+		<!--  AND ORGAN_ID = #{organId} -->
+		<if test="clientId != null  and  !clientId.equals('')">
+		AND CLIENT_ID = #{clientId}
+		</if>
+		AND BOARD_TYPE = #{boardType}
+	</delete>
+	
+	<insert id="saveContClients" parameterType="java.util.HashMap">
+		INSERT INTO TB_CONTS_CLIENTS (
+			CLIENT_ID,
+			CONTENT_ID,
+			ORGAN_ID,
+			BOARD_TYPE
+		) VALUES
+		<foreach collection="location" item="item" index="index" open="(" separator="),("  close=")">
+			#{clientId},
+			#{contentId},
+			#{item},
+			#{boardType}
+		</foreach>
+	</insert>
+	
+	<insert id="saveContClientsPromo" parameterType="java.util.HashMap">
+		INSERT INTO TB_CONTS_CLIENTS (
+			CLIENT_ID,
+			CONTENT_ID,
+			ORGAN_ID,
+			BOARD_TYPE
+		) VALUES
+		<foreach collection="client" item="item" index="index" open="(" separator="),("  close=")">
+			#{item},
+			#{contentId},
+			#{organId},
+			#{boardType}
+		</foreach>
+	</insert>
+	
+	<select id="selectPromoBoardTypeList" parameterType="clientBoardDataReqVO" resultMap="promoBoardDataMap">
+	    SELECT
+	    <if test="boardType != null  and  boardType.equals('002')">
+	    (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'IMAGE' AND CODE_GRP = '003') AS imageCode,
+	    </if>
+	    <if test="boardType != null  and  boardType.equals('008')">
+	    (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'PHOTO' AND CODE_GRP = '003') AS imageCode,
+	    </if>
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'MOV' AND CODE_GRP = '003') AS movCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'SUB' AND CODE_GRP = '003') AS subCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'URL' AND CODE_GRP = '003') AS urlCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'NTC' AND CODE_GRP = '003') AS ntcCode,
+		#{curDate} AS curDate,
+		#{clientId} AS clientId,
+		#{boardIndex} AS boardIndex,
+		#{templateType} AS templateType,
+		#{urgentYn} AS urgentYn,
+		#{pageCount} AS pageCount,
+		#{startRowNum} AS startRowNum,
+		#{boardType} AS boardType
+	<!-- 
+		SELECT 
+			D.CONTENT_TYPE AS contentType,
+			 (SELECT CODE_NAME FROM TB_CODE WHERE CODE = D.CONTENT_TYPE AND CODE_GRP = '003') AS typeName,
+			COUNT(D.CONTENT_TYPE) AS contentTypeCount,
+			#{curDate} AS curDate,
+			A.CLIENT_ID AS clientId,
+			C.BOARD_INDEX AS boardIndex
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.ORGAN_ID = B.ORGAN_ID
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND  C.BOARD_TYPE = #{boardType} AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		GROUP BY D.CONTENT_TYPE, A.CLIENT_ID
+		ORDER BY D.CONTENT_TYPE ASC
+		-->
+	</select>
+	
+	<select id="selectPromoBoardList_backup" parameterType="java.util.HashMap" resultType="promoBoardResultVO">
+		SELECT 
+			D.CONTENT_ID AS contentId,
+			D.TITLE AS title,
+			D.ORGAN_ID AS organId,
+			D.CONTENT_PATH AS contentPath,
+			D.CONTENT_NAME AS contentName,
+			SUBSTRING(D.POSTING_START,1,8)  AS postingStart,
+			SUBSTRING(D.POSTING_END,1,8)  AS postingEnd,
+			D.CONTENT_INFO AS contentInfo,
+			D.REPEAT_TYPE AS repeatType,
+			D.DEL_EXPIRED AS delExpired,
+			D.TAGS AS tags,
+			D.CONTENT_TYPE AS contentType,
+			D.CREATE_DATE AS createDate,
+			D.UPDATE_DATE AS updateDate,
+			D.PUBLISHER AS publisher,
+			D.ORIGIN_FILE AS originFile,
+			DATEDIFF(D.POSTING_END, #{curDate}) AS remainDay
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = '002' AND A.CLIENT_ID = B.CLIENT_ID
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND  C.BOARD_TYPE = '002' AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID
+		<if test="urgentYn != null  and  !urgentYn.equals('Y')">
+		INNER JOIN TB_TEMPLATE_CONTENTS E
+        ON (D.LAYOUT_TYPE = E.LAYOUT_TYPE OR E.LAYOUT_TYPE = 2 )AND E.CLIENT_ID = #{clientId}
+			AND E.TEMPLATE_TYPE = #{templateType} AND  E.CONTENT_TYPE = #{contentType} AND E.BOARD_INDEX = #{boardIndex}
+		</if>
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		<if test="urgentYn != null  and  !urgentYn.equals('')">
+		AND D.URGENT_YN = #{urgentYn}
+		</if>
+		AND D.CONTENT_TYPE = (SELECT CONTENT_TYPE FROM TB_TEMPLATE_CONTENTS WHERE CLIENT_ID = #{clientId} 
+			AND TEMPLATE_TYPE = #{templateType} AND  CONTENT_TYPE = #{contentType} AND BOARD_INDEX = #{boardIndex})		
+		ORDER BY D.CREATE_DATE DESC
+		<if test='pageCount > -1 and contentType.equals("001")'>
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>
+	<select id="selectPromoBoardListAll" parameterType="java.util.HashMap" resultType="promoBoardResultVO">
+		SELECT 
+			D.CONTENT_ID AS contentId,
+			D.TITLE AS title,
+			D.ORGAN_ID AS organId,
+			D.CONTENT_PATH AS contentPath,
+			D.CONTENT_NAME AS contentName,
+			SUBSTRING(D.POSTING_START,1,8)  AS postingStart,
+			SUBSTRING(D.POSTING_END,1,8)  AS postingEnd,
+			D.CONTENT_INFO AS contentInfo,
+			D.REPEAT_TYPE AS repeatType,
+			D.DEL_EXPIRED AS delExpired,
+			D.TAGS AS tags,
+			D.CONTENT_TYPE AS contentType,
+			D.CREATE_DATE AS createDate,
+			D.UPDATE_DATE AS updateDate,
+			D.PUBLISHER AS publisher,
+			D.ORIGIN_FILE AS originFile,
+			DATEDIFF(D.POSTING_END, #{curDate}) AS remainDay
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = #{boardType} AND A.CLIENT_ID = #{clientId}
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND  C.BOARD_TYPE = #{boardType} AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID
+		WHERE D.CONTENT_TYPE IN (SELECT CONTENT_TYPE FROM tb_template_contents WHERE CLIENT_ID=#{clientId} AND BOARD_INDEX= #{boardIndex}) 
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		ORDER BY D.URGENT_YN DESC, D.CREATE_DATE DESC
+		<if test='pageCount > -1'>
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>
+	
+	<select id="selectPromoBoardList" parameterType="java.util.HashMap" resultType="promoBoardResultVO">
+		SELECT 
+			D.CONTENT_ID AS contentId,
+			D.TITLE AS title,
+			D.ORGAN_ID AS organId,
+			D.CONTENT_PATH AS contentPath,
+			D.CONTENT_NAME AS contentName,
+			SUBSTRING(D.POSTING_START,1,8)  AS postingStart,
+			SUBSTRING(D.POSTING_END,1,8)  AS postingEnd,
+			D.CONTENT_INFO AS contentInfo,
+			D.REPEAT_TYPE AS repeatType,
+			D.DEL_EXPIRED AS delExpired,
+			D.TAGS AS tags,
+			D.CONTENT_TYPE AS contentType,
+			D.CREATE_DATE AS createDate,
+			D.UPDATE_DATE AS updateDate,
+			D.PUBLISHER AS publisher,
+			D.ORIGIN_FILE AS originFile,
+			DATEDIFF(D.POSTING_END, #{curDate}) AS remainDay
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = #{boardType} AND A.CLIENT_ID = B.CLIENT_ID
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND  C.BOARD_TYPE = #{boardType} AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID 
+		<if test="urgentYn != null  and  !urgentYn.equals('Y')">
+		INNER JOIN TB_TEMPLATE_CONTENTS E
+        ON E.CLIENT_ID = A.CLIENT_ID AND E.CLIENT_ID = #{clientId}
+			AND E.TEMPLATE_TYPE = #{templateType} AND  E.CONTENT_TYPE = #{contentType} AND E.BOARD_INDEX = #{boardIndex} 
+		</if>
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		<if test="urgentYn != null  and  !urgentYn.equals('')">
+		<!-- AND D.URGENT_YN = #{urgentYn} -->
+		</if>
+		AND D.CONTENT_TYPE = #{contentType}
+	<!-- 	(SELECT CONTENT_TYPE FROM TB_TEMPLATE_CONTENTS 
+		WHERE CLIENT_ID = #{clientId} AND TEMPLATE_ID = 12 AND  CONTENT_TYPE = #{contentType})		-->
+		ORDER BY D.URGENT_YN DESC, D.CREATE_DATE DESC
+		<if test='pageCount > -1 and contentType.equals("001")'>
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>
+	<select id="selectAnnounceBoardList" parameterType="clientBoardDataReqVO" resultMap="contentInfoMap">
+		SELECT 
+			D.CONTENT_ID AS contentId,
+			D.TITLE AS title,
+			D.ORGAN_ID AS organId,
+			D.CONTENT_PATH AS contentPath,
+			D.CONTENT_NAME AS contentName,
+			D.POSTING_START AS postingStart,
+			D.POSTING_END AS postingEnd,
+			D.CONTENT_INFO AS contentInfo,
+			D.REPEAT_TYPE AS repeatType,
+			D.PRIORITY AS priority,
+			D.HIGHLIGHT_YN AS highlightYn,
+			D.DEL_EXPIRED AS delExpired,
+			D.TAGS AS tags,
+			D.CREATE_DATE AS createDate,
+			D.UPDATE_DATE AS updateDate,
+			D.PUBLISHER AS publisher,
+			D.ORIGIN_FILE AS originFile,
+			DATEDIFF(D.POSTING_END, #{curDate}) AS remainDay,
+			D.CONTENT_TYPE AS contentType
+		FROM TB_CLIENTS A
+		INNER JOIN (SELECT DISTINCT CONTENT_ID, BOARD_TYPE, CLIENT_ID FROM TB_CONTS_CLIENTS) B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = '001'
+		INNER JOIN TB_CLIENTS_BOARD C 
+		ON A.CLIENT_ID = C.CLIENT_ID AND C.BOARD_TYPE = '001' AND C.BOARD_INDEX = #{boardIndex} 
+		INNER JOIN  TB_ANNOUNCE_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		ORDER BY D.POSTING_END ASC, D.POSTING_START ASC
+		<if test="pageCount > -1 ">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+
+	</select>	
+	<select id="selectAnnounceImageList" parameterType="java.lang.String" resultType="announceBoardDetailsVO">
+		SELECT 
+			A.CONTENT_ID AS contentId,
+			A.CONT_INDEX AS contIndex,
+			A.FILE_NAME AS fileName,
+			CONVERT(TRIM(REPLACE(B.TTS_INFO,'\r\n','')) USING utf8) AS ttsInfo
+		FROM TB_CONTS_DETAILS A
+		LEFT JOIN TB_TTS_INFO B
+		ON A.CONTENT_ID = B.CONTENT_ID AND A.CONT_INDEX = B.CONT_INDEX
+		WHERE A.CONTENT_ID = #{contentId}
+		ORDER BY A.CONT_INDEX ASC
+	</select>
+	<select id="selectContentInfoList" parameterType="contentInfoVO" resultMap="contentInfoMap">
+		SELECT 
+			contentId,
+			title,
+			organId,
+			contentPath,
+			contentName,
+			postingStart,
+			postingEnd,
+			contentInfo,
+			repeatType,
+			priority,
+			highlightYn,
+			delExpired,
+			tags,
+			contentType,
+			contentTypeName,
+			publisher,
+			originFile,	
+			remainDay,
+			createDate,
+			updateDate,
+			urgentYn
+		FROM (
+			(SELECT 
+					CONTENT_ID AS contentId,
+					TITLE AS title,
+					ORGAN_ID AS organId,
+					CONTENT_PATH AS contentPath,
+					CONTENT_NAME AS contentName,
+					POSTING_START AS postingStart,
+					POSTING_END AS postingEnd,
+					CONTENT_INFO AS contentInfo,					
+					REPEAT_TYPE AS repeatType,
+					PRIORITY AS priority,
+					HIGHLIGHT_YN AS highlightYn,
+					DEL_EXPIRED AS delExpired,
+					TAGS AS tags,
+					CONTENT_TYPE AS contentType,
+					(SELECT CODE_INFO FROM TB_CODE WHERE CODE_GRP = '003' AND CODE = CONTENT_TYPE) AS contentTypeName,
+					PUBLISHER AS publisher,
+					ORIGIN_FILE AS originFile,
+					DATEDIFF(POSTING_END, #{curDate}) AS remainDay,
+					DATE_FORMAT(CREATE_DATE, '%Y-%m-%d %H:%i:%s') AS createDate,
+					DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d %H:%i:%s') AS updateDate,
+					'N' AS urgentYn
+				FROM TB_ANNOUNCE_CONTS)
+		UNION
+			(SELECT 
+					CONTENT_ID AS contentId,
+					TITLE AS title,			
+					ORGAN_ID AS organId,		
+					CONTENT_PATH AS contentPath,
+					CONTENT_NAME AS contentName,
+					SUBSTRING(POSTING_START,1,8)  AS postingStart,
+					SUBSTRING(POSTING_END,1,8)  AS postingEnd,
+					CONTENT_INFO AS contentInfo,					
+					REPEAT_TYPE AS repeatType,
+					-1 AS priority,
+					-1 AS highlightYn,
+					DEL_EXPIRED AS delExpired,
+					TAGS AS tags,
+					CONTENT_TYPE AS contentType,
+					(SELECT CODE_INFO FROM TB_CODE WHERE CODE_GRP = '003' AND CODE = CONTENT_TYPE) AS contentTypeName,
+					PUBLISHER AS publisher,
+					ORIGIN_FILE AS originFile,
+					DATEDIFF(POSTING_END, #{curDate}) AS remainDay,
+					DATE_FORMAT(CREATE_DATE, '%Y-%m-%d %H:%i:%s') AS createDate,
+					DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d %H:%i:%s') AS updateDate,
+					URGENT_YN AS urgentYn
+				FROM TB_PROMO_CONTS)
+			) A
+		    WHERE 1=1
+		    <if test="searchContentType != null  and  searchContentType.size != 0">
+				AND A.contentType IN
+				<foreach item="item" collection="searchContentType" separator="," open="(" close=")">#{item}</foreach>
+			</if>
+			
+			<if test="startDate != null  and  !startDate.equals('')">
+		    AND ( 
+				(A.postingStart <![CDATA[ >= ]]>  #{startDate} AND A.postingStart <![CDATA[ <= ]]>  #{endDate})
+				OR (A.postingEnd <![CDATA[ >= ]]>  #{startDate} AND A.postingEnd <![CDATA[ <= ]]>  #{endDate})
+				OR (A.postingStart <![CDATA[ >= ]]>  #{startDate} AND A.postingEnd <![CDATA[ <= ]]>  #{endDate})
+				OR (A.postingStart <![CDATA[ <= ]]>  #{startDate} AND A.postingEnd <![CDATA[ >= ]]>  #{endDate})
+				)
+			</if>
+			<if test="tags != null  and  !tags.equals('')">
+				AND A.tags LIKE CONCAT('%',#{tags},'%')
+			</if>
+			<if test="title != null  and  !title.equals('')">
+				AND A.title LIKE CONCAT('%',#{title},'%')
+			</if>
+			
+			<if test="sortingCol != null  and  !sortingCol.equals('')">
+			ORDER BY CONCAT('A.',${sortingCol}) ${sortingType}
+			</if>
+			<if test="sortingCol == null  or  sortingCol.equals('')">
+			ORDER BY A.createDate DESC , A.updateDate DESC
+			</if>
+		
+			
+			LIMIT #{startRowNum}, #{pageCount}
+	</select>	
+	
+	<select id="selectAnnounceContsLocationList" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT 
+			B.ORGAN_ID AS organId,
+			B.NAME AS name
+		FROM TB_CONTS_CLIENTS A
+		INNER JOIN TB_ORGANIZATION B
+		ON A.ORGAN_ID = B.ORGAN_ID
+		WHERE A.BOARD_TYPE = '001'
+		AND A.CONTENT_ID = #{contentId}
+		ORDER BY A.ORGAN_ID ASC
+	</select>	
+	
+	<select id="selectTotalContentsList" parameterType="contentInfoVO" resultType="java.lang.Integer">
+		SELECT COUNT(A.CONTENT_ID) FROM (
+			SELECT 
+					CONTENT_ID,
+					CONTENT_TYPE,
+					POSTING_START,
+					POSTING_END,
+					TAGS,
+					TITLE
+				FROM TB_ANNOUNCE_CONTS
+			UNION ALL
+			SELECT 
+					CONTENT_ID,
+					CONTENT_TYPE,
+					POSTING_START,
+					POSTING_END,
+					TAGS,
+					TITLE
+				FROM TB_PROMO_CONTS
+			) A
+		    WHERE 1=1
+		    <if test="searchContentType != null  and  searchContentType.size != 0">
+				AND A.CONTENT_TYPE IN
+				<foreach item="item" collection="searchContentType" separator="," open="(" close=")">#{item}</foreach>
+			</if>
+			
+			<if test="startDate != null  and  !startDate.equals('')">
+		    AND ( 
+				(A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_START <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_END <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_START <![CDATA[ >= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ <= ]]>  #{endDate})
+				OR (A.POSTING_START <![CDATA[ <= ]]>  #{startDate} AND A.POSTING_END <![CDATA[ >= ]]>  #{endDate})
+				)
+			</if>
+			<if test="tags != null  and  !tags.equals('')">
+				AND A.TAGS LIKE CONCAT('%',#{tags},'%')
+			</if>
+			
+			<if test="title != null  and  !title.equals('')">
+				AND A.TITLE LIKE CONCAT('%',#{title},'%')
+			</if>	
+	</select>
+	
+	<select id="selectContentsLocationList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			B.ORGAN_ID AS organId,
+			B.NAME AS name
+		FROM TB_CONTS_CLIENTS A
+		INNER JOIN TB_ORGANIZATION B
+		ON A.ORGAN_ID = B.ORGAN_ID
+		WHERE A.CONTENT_ID = #{contentId}
+		<if test="contentType != null  and  contentType.equals('005')">
+				AND A.BOARD_TYPE = '001'
+		</if>
+		 <if test="contentType != null  and  !contentType.equals('005')">
+				AND A.BOARD_TYPE = '002'
+		</if>
+		ORDER BY A.ORGAN_ID ASC
+	</select>
+	
+	<select id="selectTotalClientAnnounceBoardInfo" parameterType="clientBoardDataReqVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(D.CONTENT_ID) AS count
+		FROM TB_CLIENTS AS A
+		INNER JOIN (SELECT DISTINCT CONTENT_ID, BOARD_TYPE, CLIENT_ID FROM TB_CONTS_CLIENTS) AS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = '001'
+		INNER JOIN TB_CLIENTS_BOARD AS C 
+		ON A.CLIENT_ID = C.CLIENT_ID  AND C.BOARD_TYPE = '001' AND C.BOARD_INDEX = #{boardIndex} 
+		INNER JOIN  TB_ANNOUNCE_CONTS AS D
+		ON B.CONTENT_ID = D.CONTENT_ID
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]> #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>
+	</select>
+	
+	<select id="selectTotalClientPromoBoardInfo_backup" parameterType="clientBoardDataReqVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(D.CONTENT_ID) AS count
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = '002'
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND C.BOARD_TYPE = '002' AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		AND D.CONTENT_TYPE = #{contentType}
+		<if test="urgentYn != null  and  !urgentYn.equals('')">
+		AND D.URGENT_YN = #{urgentYn}
+		</if>
+	</select>
+	<select id="selectTotalClientPromoBoardInfo" parameterType="clientBoardDataReqVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(D.CONTENT_ID) AS count
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = #{boardType}
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND C.BOARD_TYPE = #{boardType} AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID 
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		<if test="urgentYn != null  and  !urgentYn.equals('')">
+		AND D.URGENT_YN = #{urgentYn}
+		</if>
+	</select>
+	<select id="selectCountUrgentContents" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		SELECT 
+			COUNT(D.CONTENT_ID) AS count
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.ORGAN_ID = B.ORGAN_ID AND B.BOARD_TYPE = '002'
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND C.BOARD_TYPE = '002' AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		AND URGENT_YN = 'Y'
+	</select>
+	<select id="selectImageBoardInfo" resultType="java.util.HashMap" parameterType="clientBoardDataReqVO">
+		SELECT * FROM (
+			SELECT  CONVERT(ROW_NUMBER() OVER(ORDER BY A.BOARD_INDEX ASC), CHAR) AS minBoardIndex
+			 , (SELECT COUNT(CLIENT_ID) FROM TB_CLIENTS_BOARD WHERE CLIENT_ID = #{clientId} AND BOARD_TYPE = #{boardType}) AS count
+			 , A.BOARD_INDEX
+			FROM TB_CLIENTS_BOARD A
+					LEFT JOIN TB_CLIENTS B ON  A.CLIENT_ID  = B.CLIENT_ID
+			        WHERE A.CLIENT_ID = #{clientId} AND A.BOARD_TYPE = #{boardType}
+		) C
+		WHERE C.BOARD_INDEX = #{boardIndex}
+	</select>
+	<select id="selectImageBoardInfo1" resultType="java.util.HashMap" parameterType="clientBoardDataReqVO">
+		SELECT COUNT(A.CLIENT_ID) AS count, MIN(A.BOARD_INDEX) AS minBoardIndex,B.B_BAR AS bBar FROM TB_CLIENTS_BOARD A
+		LEFT JOIN TB_CLIENTS B ON  A.CLIENT_ID  = B.CLIENT_ID
+        WHERE A.CLIENT_ID = #{clientId} AND A.BOARD_TYPE = #{boardType}<!--  AND A.ACTIVE_YN = 'Y' --> 
+	</select>
+	
+	<select id="selectExpiredContentInfoList" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT 
+			contentId,
+			title,
+			organId,
+			contentPath,
+			contentName,
+			postingStart,
+			postingEnd,
+			contentInfo,
+			repeatType,
+			priority,
+			highlightYn,
+			delExpired,
+			tags,
+			contentType,			
+			publisher,
+			originFile
+		FROM (
+			(SELECT 
+					CONTENT_ID AS contentId,
+					TITLE AS title,
+					ORGAN_ID AS organId,
+					CONTENT_PATH AS contentPath,
+					CONTENT_NAME AS contentName,
+					POSTING_START AS postingStart,
+					POSTING_END AS postingEnd,
+					CONTENT_INFO AS contentInfo,					
+					REPEAT_TYPE AS repeatType,
+					PRIORITY AS priority,
+					HIGHLIGHT_YN AS highlightYn,
+					DEL_EXPIRED AS delExpired,
+					TAGS AS tags,
+					CONTENT_TYPE AS contentType,			
+					PUBLISHER AS publisher,
+					ORIGIN_FILE AS originFile
+				FROM TB_ANNOUNCE_CONTS)
+		UNION
+			(SELECT 
+					CONTENT_ID AS contentId,
+					TITLE AS title,			
+					ORGAN_ID AS organId,		
+					CONTENT_PATH AS contentPath,
+					CONTENT_NAME AS contentName,
+					SUBSTRING(POSTING_START,1,8)  AS postingStart,
+					SUBSTRING(POSTING_END,1,8)  AS postingEnd,
+					CONTENT_INFO AS contentInfo,					
+					REPEAT_TYPE AS repeatType,
+					-1 AS priority,
+					-1 AS highlightYn,
+					DEL_EXPIRED AS delExpired,
+					TAGS AS tags,
+					CONTENT_TYPE AS contentType,
+					PUBLISHER AS publisher,
+					ORIGIN_FILE AS originFile
+				FROM TB_PROMO_CONTS)
+			) A
+		     WHERE A.delExpired = 'Y' AND A.postingEnd <![CDATA[ < ]]>  #{curDate} 
+	</select>
+	
+	<select id="selectMainBoardTypeList" parameterType="clientBoardDataReqVO" resultMap="mainBoardDataMap">
+	    SELECT
+	    (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'IMAGE' AND CODE_GRP = '003') AS imageCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'MOV' AND CODE_GRP = '003') AS movCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'SUB' AND CODE_GRP = '003') AS subCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'URL' AND CODE_GRP = '003') AS urlCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'NTC' AND CODE_GRP = '003') AS ntcCode,
+		#{curDate} AS curDate,
+		#{clientId} AS clientId,
+		#{boardIndex} AS boardIndex,
+		#{templateType} AS templateType,
+		#{urgentYn} AS urgentYn,
+		#{pageCount} AS pageCount,
+		#{startRowNum} AS startRowNum
+	</select>
+	
+	<select id="selectEventBoardData" parameterType="clientBoardDataReqVO" resultType="java.util.HashMap">
+		SELECT 
+			D.CONTENT_ID AS contentId,
+			D.TITLE AS title,
+			D.ORGAN_ID AS organId,
+			D.CONTENT_PATH AS contentPath,
+			D.CONTENT_NAME AS contentName,
+			D.POSTING_START  AS postingStart,
+			D.POSTING_END  AS postingEnd,
+			D.CONTENT_INFO AS contentInfo,
+			D.REPEAT_TYPE AS repeatType,
+			D.DEL_EXPIRED AS delExpired,
+			D.TAGS AS tags,
+			D.CONTENT_TYPE AS contentType,
+			D.CREATE_DATE AS createDate,
+			D.UPDATE_DATE AS updateDate,
+			D.PUBLISHER AS publisher,
+			D.ORIGIN_FILE AS originFile,
+			DATEDIFF(D.POSTING_END, #{curDate}) AS remainDay
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = '002' AND A.CLIENT_ID = B.CLIENT_ID
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID AND D.USE_MAIN = 'Y'
+		WHERE A.CLIENT_ID = #{clientId}
+		ORDER BY D.CREATE_DATE DESC
+	</select>
+	
+	<select id="selectClientNewsletterBoardInfo" parameterType="clientBoardDataReqVO" resultMap="newsLetterInfoMap">
+		SELECT 
+			D.CONTENT_ID AS contentId,
+			D.TITLE AS title,
+			D.ORGAN_ID AS organId,
+			D.CONTENT_PATH AS contentPath,
+			D.CONTENT_NAME AS contentName,
+			D.POSTING_START AS postingStart,
+			D.POSTING_END AS postingEnd,
+			D.CONTENT_INFO AS contentInfo,
+			D.REPEAT_TYPE AS repeatType,
+			D.PRIORITY AS priority,
+			D.HIGHLIGHT_YN AS highlightYn,
+			D.DEL_EXPIRED AS delExpired,
+			D.TAGS AS tags,
+			D.CREATE_DATE AS createDate,
+			D.UPDATE_DATE AS updateDate,
+			D.PUBLISHER AS publisher,
+			D.ORIGIN_FILE AS originFile,
+			DATEDIFF(D.POSTING_END, #{curDate}) AS remainDay,
+			D.CONTENT_TYPE AS contentType,
+			#{curDate} AS curDate,
+            E.FILE_NAME AS fileName
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+			ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = #{boardType}
+		INNER JOIN TB_CLIENTS_BOARD C 
+			ON A.CLIENT_ID = C.CLIENT_ID AND C.BOARD_TYPE = #{boardType} AND C.BOARD_INDEX = #{boardIndex} 
+		INNER JOIN  TB_ANNOUNCE_CONTS D
+			ON B.CONTENT_ID = D.CONTENT_ID
+		LEFT JOIN TB_CONTS_DETAILS E
+        	ON D.CONTENT_ID = E.CONTENT_ID
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		ORDER BY D.UPDATE_DATE DESC, E.CONT_INDEX ASC
+		<if test="pageCount > -1 ">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+
+	</select>	
+	<select id="selectNewsletterImageList" parameterType="java.util.HashMap" resultType="announceBoardDetailsVO">
+		SELECT 
+		    A.UPDATE_DATE AS updateDate,
+			B.CONTENT_ID AS contentId,
+			B.CONT_INDEX AS contIndex,
+			B.FILE_NAME AS fileName,
+			CONVERT(TRIM(REPLACE(C.TTS_INFO,'\r\n','')) USING utf8) AS ttsInfo
+		FROM TB_ANNOUNCE_CONTS AS A 
+        INNER JOIN TB_CONTS_DETAILS AS B
+			ON A.CONTENT_ID = B.CONTENT_ID
+				<if test="curDate != null  and  !curDate.equals('')">
+					AND A.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+					AND A.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+				</if>	
+		LEFT JOIN TB_TTS_INFO AS C
+			ON B.CONTENT_ID = C.CONTENT_ID AND B.CONT_INDEX = C.CONT_INDEX
+		ORDER BY B.CONTENT_ID DESC , B.CONT_INDEX ASC
+	</select>
+	
+	<select id="selectJuminBoardTypeList" parameterType="clientBoardDataReqVO" resultMap="juminBoardDataMap">
+	    SELECT
+	    (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'IMAGE' AND CODE_GRP = '003') AS imageCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'MOV' AND CODE_GRP = '003') AS movCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'SUB' AND CODE_GRP = '003') AS subCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'URL' AND CODE_GRP = '003') AS urlCode,
+        (SELECT CODE FROM TB_CODE WHERE CODE_NAME = 'NTC' AND CODE_GRP = '003') AS ntcCode,
+		#{curDate} AS curDate,
+		#{clientId} AS clientId,
+		#{boardIndex} AS boardIndex,
+		#{templateType} AS templateType,
+		#{urgentYn} AS urgentYn,
+		#{pageCount} AS pageCount,
+		#{startRowNum} AS startRowNum,
+		#{boardType} AS boardType
+	</select> 
+	
+	<select id="selectJuminBoardList" parameterType="java.util.HashMap" resultType="promoBoardResultVO">
+		SELECT 
+			D.CONTENT_ID AS contentId,
+			D.TITLE AS title,
+			D.ORGAN_ID AS organId,
+			D.CONTENT_PATH AS contentPath,
+			D.CONTENT_NAME AS contentName,
+			SUBSTRING(D.POSTING_START,1,8)  AS postingStart,
+			SUBSTRING(D.POSTING_END,1,8)  AS postingEnd,
+			D.CONTENT_INFO AS contentInfo,
+			D.REPEAT_TYPE AS repeatType,
+			D.DEL_EXPIRED AS delExpired,
+			D.TAGS AS tags,
+			D.CONTENT_TYPE AS contentType,
+			D.CREATE_DATE AS createDate,
+			D.UPDATE_DATE AS updateDate,
+			D.PUBLISHER AS publisher,
+			D.ORIGIN_FILE AS originFile,
+			DATEDIFF(D.POSTING_END, #{curDate}) AS remainDay
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = #{boardType} AND A.CLIENT_ID = B.CLIENT_ID
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND  C.BOARD_TYPE = #{boardType} AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_JUMIN_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID 
+		<if test="urgentYn != null  and  !urgentYn.equals('Y')">
+		INNER JOIN TB_TEMPLATE_CONTENTS E
+        ON E.CLIENT_ID = A.CLIENT_ID AND E.CLIENT_ID = #{clientId}
+			AND E.TEMPLATE_TYPE = #{templateType} AND  E.CONTENT_TYPE = #{contentType} AND E.BOARD_INDEX = #{boardIndex} 
+		</if>
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		<if test="urgentYn != null  and  !urgentYn.equals('')">
+		<!-- AND D.URGENT_YN = #{urgentYn} -->
+		</if>
+		AND D.CONTENT_TYPE = #{contentType}
+	<!-- 	(SELECT CONTENT_TYPE FROM TB_TEMPLATE_CONTENTS 
+		WHERE CLIENT_ID = #{clientId} AND TEMPLATE_ID = 12 AND  CONTENT_TYPE = #{contentType})		-->
+		ORDER BY D.URGENT_YN DESC, D.CREATE_DATE DESC
+		<if test='pageCount > -1 and contentType.equals("001")'>
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+	</select>
+	
+	<select id="selectTotalClientJuminBoardInfo" parameterType="clientBoardDataReqVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(D.CONTENT_ID) AS count
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = #{boardType}
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND C.BOARD_TYPE = #{boardType} AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_JUMIN_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID 
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		<if test="urgentYn != null  and  !urgentYn.equals('')">
+		AND D.URGENT_YN = #{urgentYn}
+		</if>
+	</select>
+	
+	<select id="selectClientNoticeInfo" parameterType="clientBoardDataReqVO" resultType="java.util.HashMap">
+		SELECT 
+			D.CONTENT_ID AS contentId,
+			D.TITLE AS title,
+			D.ORGAN_ID AS organId,
+			D.CONTENT_PATH AS contentPath,
+			D.CONTENT_NAME AS contentName,
+			SUBSTRING(D.POSTING_START,1,8)  AS postingStart,
+			SUBSTRING(D.POSTING_END,1,8)  AS postingEnd,
+			D.CONTENT_INFO AS contentInfo,
+			D.REPEAT_TYPE AS repeatType,
+			D.DEL_EXPIRED AS delExpired,
+			D.TAGS AS tags,
+			D.CONTENT_TYPE AS contentType,
+			D.CREATE_DATE AS createDate,
+			D.UPDATE_DATE AS updateDate,
+			D.PUBLISHER AS publisher,
+			D.ORIGIN_FILE AS originFile,
+			DATEDIFF(D.POSTING_END, #{curDate}) AS remainDay
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID 
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>	
+		AND D.CONTENT_TYPE = '006'
+		ORDER BY D.CREATE_DATE DESC
+	</select>
+	
+	<select id="selectReserveBoardData" parameterType="clientBoardDataReqVO" resultType="reserveRoomInfoVO">
+		SELECT 
+			A.RESERVE_ID AS reserveId,
+			A.TITLE AS title,
+			A.PLACE AS place,
+			A.ORGANIZER AS organizer,
+			A.RESERVE_INFO AS reserveInfo,
+			A.START_TIME AS startTime,
+			A.END_TIME AS endTime,
+			A.CREATE_DATE AS createDate,
+			A.FILE_PATH AS filePath,
+			A.FILE_NAME AS fileName,
+			A.CONTENT_TYPE AS contentType,
+			A.ORIGIN_FILE_NAME AS originFileName,
+			B.ROOM_ID AS roomId,
+			B.ROOM_NAME AS roomName,
+			B.ROOM_INFO AS roomInfo,
+			B.ROOM_NUMBER AS roomNumber,
+			B.USE_YN AS useYn
+		FROM TB_RESERVE_INFO A
+		LEFT JOIN TB_RESERVE_ROOM B
+		ON A.ROOM_ID = B.ROOM_ID 
+		WHERE A.ROOM_ID = #{clientId}
+		AND NOW() BETWEEN A.START_TIME AND A.END_TIME
+		LIMIT 1
+	</select>
+
+	<resultMap id="downloadAnnounceInfoMap" type="java.util.HashMap">
+		<result property="contentId" column="contentId"/>
+		<result property="filePath" column="filePath"/>
+		<collection property="contents" column="contentId" ofType= "java.lang.String" select="selectAnnounceImageList">
+		</collection>
+	</resultMap>
+
+	<resultMap id="downloadBoardDataMap" type="downloadBoardResultVO">
+		<collection property="notice" column="{ clientId = clientId, curDate = curDate, boardIndex = boardIndex}" ofType= "java.util.HashMap" select="selectDownloadAnnounceBoardList">
+		</collection>
+		<collection property="promo" column="{ clientId = clientId, curDate = curDate,  boardIndex = boardIndex}" ofType= "java.util.HashMap" select="selectDownloadPromoBoardList">
+		</collection>
+	</resultMap>
+
+	<select id="selectDownloadBoardList" parameterType="clientBoardDataReqVO" resultMap="downloadBoardDataMap">
+		SELECT
+			#{curDate} AS curDate,
+			#{clientId} AS clientId,
+			#{boardIndex} AS boardIndex
+	</select>
+
+	<select id="selectDownloadAnnounceBoardList" parameterType="java.util.HashMap" resultMap="downloadAnnounceInfoMap">
+		SELECT
+		D.CONTENT_ID AS contentId,
+		CONCAT(D.CONTENT_PATH ,'/',D.CONTENT_NAME) AS filePath
+		FROM TB_CLIENTS A
+		INNER JOIN (SELECT DISTINCT CONTENT_ID, BOARD_TYPE, CLIENT_ID FROM TB_CONTS_CLIENTS) B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = '001'
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND C.BOARD_TYPE = '001' AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_ANNOUNCE_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID
+		WHERE A.CLIENT_ID = #{clientId}
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>
+		ORDER BY D.POSTING_END ASC, D.POSTING_START ASC
+	</select>
+
+	<select id="selectDownloadPromoBoardList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT
+		D.CONTENT_ID AS contentId,
+		CONCAT(D.CONTENT_PATH ,'/',D.CONTENT_NAME) AS filePath
+		FROM TB_CLIENTS A
+		INNER JOIN TB_CONTS_CLIENTS B
+		ON A.CLIENT_ID = B.CLIENT_ID AND B.BOARD_TYPE = '002' AND A.CLIENT_ID = #{clientId}
+		INNER JOIN TB_CLIENTS_BOARD C
+		ON A.CLIENT_ID = C.CLIENT_ID AND  C.BOARD_TYPE = '002' AND C.BOARD_INDEX = #{boardIndex}
+		INNER JOIN  TB_PROMO_CONTS D
+		ON B.CONTENT_ID = D.CONTENT_ID
+		WHERE D.CONTENT_TYPE IN (SELECT CONTENT_TYPE FROM tb_template_contents WHERE CLIENT_ID=#{clientId} AND BOARD_INDEX= #{boardIndex})
+		<if test="curDate != null  and  !curDate.equals('')">
+			AND D.POSTING_START <![CDATA[ <= ]]>  #{curDate}
+			AND D.POSTING_END <![CDATA[ >= ]]>  #{curDate}
+		</if>
+		ORDER BY D.URGENT_YN DESC, D.CREATE_DATE DESC
+	</select>
+</mapper>

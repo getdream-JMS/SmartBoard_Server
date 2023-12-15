@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="passnijni">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../lib/passnijni.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

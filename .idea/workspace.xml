@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="D-Board:war exploded" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1e679855-c1ca-4004-872c-d8cead7758a1" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/common/utils/CompressZip.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/version/VersionController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/version/dao/VersionManageDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/version/dao/VersionManageDaoImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/version/service/VersionManageService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/version/service/VersionManageServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/vo/DownloadBoardResultVO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/VersionMngSqlMap.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/D-Board_Nowon_Upgrade.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/common/config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/common/config/ApplicationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/common/config/DataConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/common/config/DataConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/common/dao/CommonCodeDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/common/dao/CommonCodeDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/common/dao/CommonCodeDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/common/dao/CommonCodeDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/core/ScanedImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/core/ScanedImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/core/socket/TCPSocketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/core/socket/TCPSocketServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/core/socket/websocket/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/core/socket/websocket/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/core/socket/websocket/WebsocketEndpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/core/socket/websocket/WebsocketEndpoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/clients/service/ClientsManageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/clients/service/ClientsManageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/code/CodeManageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/code/CodeManageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/code/dao/CodeManageDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/code/dao/CodeManageDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/code/service/CodeManageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/code/service/CodeManageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/content/dao/ContentManageDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/content/dao/ContentManageDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/content/dao/ContentManageDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/content/dao/ContentManageDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/content/service/ContentManageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/content/service/ContentManageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/content/service/ContentManageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/content/service/ContentManageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/external/ExternalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/external/ExternalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/monitoring/service/MonitoringManageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/monitoring/service/MonitoringManageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/scheduler/controller/ScheduleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/scheduler/controller/ScheduleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/scheduler/service/SchedulerManageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/scheduler/service/SchedulerManageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/vo/MonitoringInfoVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jms/dboard/manage/vo/MonitoringInfoVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/CommonCodeSqlMap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/CommonCodeSqlMap.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/ContentManageSqlMap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/ContentManageSqlMap.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/MonitoringMngSqlMap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/MonitoringMngSqlMap.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/spring/database.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/spring/database.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/AnnounceBoardSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/AuthMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ClientsManageSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/CommonCodeSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ConfigCodeSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ContentManageSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DashboardMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/EmergencySqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ExternalMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/HelpMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/JuminBoardSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/LogMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MenuMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MissingSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MonitoringMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsBoardSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NowonMngSqlMap.bak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NowonMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/OrganizationMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/PromoBoardSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ReserveMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ServerMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SystemMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/TonghapMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/TransFailOverSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/WeatherDataMngSqlMap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/alarm-properties.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/authentication/CustomAuthenticationFailureHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/authentication/CustomAuthenticationSuccessHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/authentication/CustomWebAndMethodSecurityExpressionRoot.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/authentication/CustomWebSecurityExpressionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/authentication/WebAndMethodSecurityExpressionRoot.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/APIUrlValue.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/HttpUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/ApplicationConfig$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/ApplicationConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/ApplicationInitializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/CustomSpringConfigurator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/DataConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/DataConfigNowon.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/SecurityWebApplicationInitializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/SingletonCmsStatusBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/SpringJobBeanFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/config/WebSocketConfigurator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/dao/CommonCodeDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/dao/CommonCodeDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/handler/FileUploadExceptionAdvice.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/interceptor/SessionInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/listener/SessionListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/monitor/snmp/NmsSnmpClient.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/monitor/snmp/SimpleSnmpClient.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/monitor/snmp/SnmpClientHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/ApplicationEnvironmentUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/ApplicationUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/CommonUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/Constant$ROLE_TYPE.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/Constant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/CookieUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/FfmpegUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/FileExtFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/HashUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/HostInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/ResourceUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/utils/XMLBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/vo/AlarmVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/vo/BasePagingVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/vo/BaseSearchVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/vo/CommonCodeVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/common/vo/SnmpInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/Binirization.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/ImageFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/ImageFilterUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/NoiseFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/PDFParserTextStripper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/PDFUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/ScanedImage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/ClientInfoObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/ClientSocket.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/InitServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/MonoTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/SocketIOController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/SocketIOServerpDemon$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/SocketIOServerpDemon$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/SocketIOServerpDemon$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/SocketIOServerpDemon$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/SocketIOServerpDemon$Singleton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/SocketIOServerpDemon.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/SocketListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/SocketListenerImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/TCPSocketServer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/websocket/Message.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/websocket/MessageDecoder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/websocket/MessageEncoder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/core/socket/websocket/WebsocketEndpoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/job/Singleton4TranscoderStatus$LazyHolder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/job/Singleton4TranscoderStatus.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/login/LoginController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/login/dao/LoginDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/login/dao/LoginDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/login/service/LoginService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/login/service/LoginServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/main/MainController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/main/ServerMngController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/main/UploadFileController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/announce/AnnounceBoardController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/announce/dao/AnnounceBoardDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/announce/dao/AnnounceBoardDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/announce/service/AnnounceBoardService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/announce/service/AnnounceBoardServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/clients/ClientsManageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/clients/dao/ClientsManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/clients/dao/ClientsManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/clients/service/ClientsManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/clients/service/ClientsManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/code/CodeManageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/code/dao/CodeManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/code/dao/CodeManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/code/service/CodeManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/code/service/CodeManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/content/ContentManageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/content/dao/ContentManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/content/dao/ContentManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/content/service/ContentManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/content/service/ContentManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/dao/ServerMngDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/dao/ServerMngDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/dashboard/DashboardController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/dashboard/dao/DashboardDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/dashboard/dao/DashboardDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/dashboard/service/DashboardService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/dashboard/service/DashboardServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/emergency/EmergencyManageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/emergency/dao/EmergencyManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/emergency/dao/EmergencyManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/emergency/service/EmergencyManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/emergency/service/EmergencyManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/eventschedule/EventScheduleBoardController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/eventschedule/dao/EventScheduleBoardDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/eventschedule/dao/EventScheduleBoardDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/eventschedule/service/EventScheduleBoardService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/eventschedule/service/EventScheduleBoardServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/external/ExternalController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/external/SSOController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/help/HelpInfoController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/help/dao/HelpManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/help/dao/HelpManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/help/service/HelpManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/help/service/HelpManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/jumin/JuminBoardController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/jumin/dao/JuminBoardDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/jumin/dao/JuminBoardDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/jumin/service/JuminBoardService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/jumin/service/JuminBoardServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/log/LogManageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/log/dao/LogManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/log/dao/LogManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/log/service/LogManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/log/service/LogManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/menu/MenuController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/menu/dao/MenuDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/menu/dao/MenuDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/menu/service/MenuService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/menu/service/MenuServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/missing/MissingController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/missing/dao/MissingManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/missing/dao/MissingManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/missing/service/MissingManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/missing/service/MissingManageServiceImpl$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/missing/service/MissingManageServiceImpl$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/missing/service/MissingManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/monitoring/MonitoringController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/monitoring/dao/MonitoringManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/monitoring/dao/MonitoringManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/monitoring/service/MonitoringManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/monitoring/service/MonitoringManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/newsletter/NewsBoardController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/newsletter/dao/NewsBoardDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/newsletter/dao/NewsBoardDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/newsletter/service/NewsBoardService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/newsletter/service/NewsBoardServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/organization/OrganizationManageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/organization/dao/OrganizationManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/organization/dao/OrganizationManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/organization/service/OrganizationManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/organization/service/OrganizationManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/promo/PromoBoardController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/promo/dao/PromoBoardDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/promo/dao/PromoBoardDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/promo/service/PromoBoardService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/promo/service/PromoBoardServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/reserve/ReserveBoardController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/reserve/dao/ReserveBoardDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/reserve/dao/ReserveBoardDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/reserve/service/ReserveBoardService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/reserve/service/ReserveBoardServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/scheduler/controller/ScheduleController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/scheduler/controller/WeatherController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/scheduler/dao/SchedulerManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/scheduler/dao/SchedulerManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/scheduler/service/SchedulerManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/scheduler/service/SchedulerManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/service/ServerMngService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/service/ServerMngServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/system/controller/SystemManageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/system/dao/SystemManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/system/dao/SystemManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/system/service/SystemManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/system/service/SystemManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/tonghap/dao/TonghapIntegrateDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/tonghap/dao/TonghapInterfaceDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/tonghap/service/TonghapInterfaceService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/tonghap/service/TonghapInterfaceServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/user/controller/UserManageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/user/dao/UserManageDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/user/dao/UserManageDaoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/user/service/AuthenticationService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/user/service/UserManageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/user/service/UserManageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/AnnounceBoardDetailsVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/AnnounceBoardResultVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/AnnounceBoardVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/BoardTemplateInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ClientBoardDataReqVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ClientBoardsInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ClientLocationInfoResultVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ClientLocationReqInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ClientScheduleVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ClientTemplateInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ClientsInfoResultVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ClientsInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ContentInfoResultVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ContentInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/CustomHolidayOffVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/FtpServerInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/HelpInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/LogInfoResultVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/LogInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/LoginLogInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MenuInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MenuReqVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MissingConnectInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MissingPeopleInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MissingPeopleManagerVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MissingPeopleReqInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MissingPeopleResInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MonitoringInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MonitoringReqDetailInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MonitoringReqInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/MonitoringResInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/NewsBoardDetailsVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/NewsBoardResultVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/NewsBoardVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/OrganInfo2VO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/OrganInfoResultVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/OrganInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/OrganMemberInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/PromoBoardResultVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/PromoBoardVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ReserveRoomInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/RoleInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ServerDiskInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ServerInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ServerSnmpVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/ServerStatusVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/TonghapEventClientVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/TonghapEventReqInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/TtsInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/UserInfoSearchVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/UserInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/UserReqInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/wows/dboard/manage/vo/WeatherInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/database.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/database.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ffmpeg.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ffprobe.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mapper/CommonCodeSqlMap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/CommonCodeSqlMap.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mapper/ContentManageSqlMap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/ContentManageSqlMap.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mapper/MonitoringMngSqlMap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/MonitoringMngSqlMap.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/spring/database.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/spring/database.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/m2e-wtp/web-resources/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/m2e-wtp/web-resources/META-INF/maven/D-Board/D-Board/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/m2e-wtp/web-resources/META-INF/maven/D-Board/D-Board/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2RaKkT3s4w2BtbbhyftKooXAyrt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Dev/Sejin/kangnam_server/src/main/resources/mapper&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;모듈&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.46812385&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;b8b4e65ca2165e510c4ac9fa46d53398&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Dev\Sejin\kangnam_server\src\main\resources\mapper" />
+      <recent name="D:\Dev\Sejin\kangnam_server\src\main\java\com\jms\dboard\manage\version" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.jms.dboard.manage.vo" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn war:war" />
+      <command value="mvn compile" />
+      <command value="mvn war:exploded" />
+      <command value="mvn install" />
+      <command value="mvn deploy" />
+      <command value="mvn clean" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Tomcat 서버.Tomcat 9.0.34">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="kangnam_server" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="kangnam_server" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="D-Board [deploy]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="deploy" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="Tomcat 9.0.34" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9.0.34" ALTERNATIVE_JRE_ENABLED="true" ALTERNATIVE_JRE_PATH="C:\Program Files\Java\jdk1.8.0_91\jre" nameIsGenerated="true">
+      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:18000" />
+      <option name="COMMON_VM_ARGUMENTS" value="-Dfile.encoding=UTF-8" />
+      <option name="UPDATE_ON_FRAME_DEACTIVATION" value="true" />
+      <option name="UPDATE_CLASSES_ON_FRAME_DEACTIVATION" value="true" />
+      <deployment>
+        <artifact name="D-Board:war exploded">
+          <settings>
+            <option name="CONTEXT_PATH" value="/" />
+          </settings>
+        </artifact>
+      </deployment>
+      <server-settings>
+        <option name="AJP_PORT" value="8009" />
+        <option name="BASE_DIRECTORY_NAME" value="56429f04-edfc-4e63-af40-967980796fab" />
+        <option name="DEPLOY_TOMCAT_APPS" value="true" />
+      </server-settings>
+      <predefined_log_file enabled="true" id="Tomcat" />
+      <predefined_log_file enabled="true" id="Tomcat Catalina" />
+      <predefined_log_file id="Tomcat Manager" />
+      <predefined_log_file id="Tomcat Host Manager" />
+      <predefined_log_file id="Tomcat Localhost Access" />
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="51664" />
+      </RunnerSettings>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Profile">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Maven.D-Board [deploy]" />
+      <item itemvalue="Tomcat 서버.Tomcat 9.0.34" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="1e679855-c1ca-4004-872c-d8cead7758a1" name="변경" comment="" />
+      <created>1687482895271</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1687482895271</updated>
+      <workItem from="1687482896412" duration="5209000" />
+      <workItem from="1687488118271" duration="1503000" />
+      <workItem from="1687843973516" duration="36210000" />
+      <workItem from="1688091091230" duration="2342000" />
+      <workItem from="1688093445422" duration="7042000" />
+      <workItem from="1689050791425" duration="1759000" />
+      <workItem from="1691990961265" duration="16347000" />
+      <workItem from="1692009361817" duration="18852000" />
+      <workItem from="1692159473133" duration="253000" />
+      <workItem from="1697513487754" duration="9783000" />
+      <workItem from="1698198628079" duration="596000" />
+      <workItem from="1698307606894" duration="594000" />
+      <workItem from="1698821231731" duration="3582000" />
+      <workItem from="1701740740579" duration="4349000" />
+      <workItem from="1702288209085" duration="6321000" />
+      <workItem from="1702529547355" duration="520000" />
+      <workItem from="1702530233882" duration="3155000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

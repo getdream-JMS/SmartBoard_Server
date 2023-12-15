@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dashboardMng">
+	<resultMap id="dashboardClientInfoMap" type="java.util.HashMap">
+	   <result property="totalCount" column="totalCount"/>
+	   <result property="errorCount" column="errorCount"/>
+	   <result property="stopCount" column="stopCount"/>
+	   <result property="workCount" column="workCount"/>	 
+	   <result property="roleType" column="roleType"/>  
+	   <collection property="clients" column="{userId = userId ,roleType = roleType}" ofType= "java.util.HashMap" select="selectClientsInfoList">
+	   </collection>
+	</resultMap>
+	
+	<resultMap id="clientInfoMap" type="java.util.HashMap">
+	   <result property="clientId" column="clientId"/>
+	   <result property="organId" column="organId"/>
+	   <result property="organName" column="organName"/>
+	   <result property="clientName" column="clientName"/>
+	   <result property="clientIp" column="clientIp"/>
+	   <result property="holidayOff" column="holidayOff"/>
+	   <result property="status" column="status"/>
+	   <result property="activeYn" column="activeYn"/>
+	   <result property="memory" column="memory"/>
+	   <result property="cpu" column="cpu"/>
+	   <collection property="boards" column="clientId" ofType= "java.lang.String" select="clientsMng.selectClientBoardsList">
+	   </collection>
+	</resultMap>
+	
+	<select id="selectDashboardInfo" parameterType="clientsInfoVO" resultMap="dashboardClientInfoMap">
+		SELECT 
+			#{userId} AS userId,
+			#{roleType} AS roleType,
+			COUNT(A.CLIENT_ID) AS totalCount,
+            COUNT(B.CLIENT_ID) AS errorCount,
+            COUNT(C.CLIENT_ID) AS stopCount,	
+			COUNT(D.CLIENT_ID) AS workCount	
+		FROM TB_CLIENTS A
+		LEFT JOIN TB_CLIENT_MNTR B
+        ON A.CLIENT_ID = B.CLIENT_ID AND (B.STATUS = 0 OR B.STATUS = NULL)
+        LEFT JOIN TB_CLIENT_MNTR C
+        ON A.CLIENT_ID = C.CLIENT_ID AND C.STATUS = 1 AND A.ACTIVE_YN = 'N'
+        LEFT JOIN TB_CLIENT_MNTR D
+		ON A.CLIENT_ID = D.CLIENT_ID AND D.STATUS = 1 AND A.ACTIVE_YN = 'Y'
+		<if test="roleType != null  and  !roleType.equalsIgnoreCase('S')">
+			WHERE A.CLIENT_ID IN (SELECT CLIENT_ID FROM TB_USER_CLIENT WHERE USER_ID = #{userId})
+		</if>
+	<!-- 	WHERE A.ORGAN_ID IN (SELECT ORGAN_ID FROM TB_USER_ORGAN WHERE USER_ID = #{userId})	-->	
+	</select>
+	
+	<select id="selectClientsInfoList" parameterType="java.util.HashMap" resultMap="clientInfoMap">
+		SELECT 
+			A.CLIENT_ID clientId,
+			A.ORGAN_ID AS organId,
+			(SELECT NAME FROM TB_ORGANIZATION WHERE ORGAN_ID = A.ORGAN_ID) AS organName,
+			A.CLIENT_NAME AS clientName,
+			A.CLIENT_IP AS clientIp,
+			A.HOLIDAY_OFF AS holidayOff,
+			A.CUSTOM_HOLIDAY_OFF AS customHolidayOff,
+			A.CREATE_DATE AS createDate,
+			A.UPDATE_DATE AS updateDate,
+			A.ACTIVE_YN AS activeYn,
+			IFNULL(B.STATUS, 0) AS status,
+			B.MEMORY AS memory,
+			B.CPU AS cpu
+		FROM TB_CLIENTS A
+		LEFT JOIN TB_CLIENT_MNTR B
+		ON A.CLIENT_ID = B.CLIENT_ID
+		<if test="roleType != null  and  !roleType.equalsIgnoreCase('S')">
+			WHERE A.CLIENT_ID IN (SELECT CLIENT_ID FROM TB_USER_CLIENT WHERE USER_ID = #{userId})
+		</if>		
+		ORDER BY A.CREATE_DATE,A.CLIENT_NAME DESC
+	</select>	
+</mapper>

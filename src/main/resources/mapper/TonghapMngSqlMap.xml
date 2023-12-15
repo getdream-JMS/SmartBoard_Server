@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tonghapMng">
+	<resultMap id="clientLocationInfoMap" type="java.util.HashMap">
+	   <result property="id" column="id"/>
+	   <result property="num" column="num"/>
+	   <result property="nm" column="nm"/>
+	   <result property="adcd" column="adcd"/>
+	   <result property="adr" column="adr"/>
+	   <result property="x" column="x"/>
+	   <result property="y" column="y"/>	   
+	</resultMap>
+
+	<select id="selectClientLocationList" parameterType="clientLocationReqInfoVO" resultMap="clientLocationInfoMap">
+		SELECT 
+			A.CLIENT_ID id,
+			IFNULL(A.ORGAN_ID,'') AS num,
+			IFNULL(A.CLIENT_NAME,'') AS nm,
+			IFNULL(A.ADCD,'') AS adcd,
+			IFNULL(A.CLIENT_ADDR,'') AS adr,
+			A.LONGITUDE AS x,
+			A.LATITUDE AS y,
+			B.STATUS AS stats
+		FROM TB_CLIENTS A
+		LEFT JOIN TB_CLIENT_STATUS B
+		ON A.CLIENT_ID = B.CLIENT_ID
+		WHERE A.USE_YN = 'Y'
+		<if test="id != null  and  !id.equals('')">
+			AND CLIENT_ID = #{id}
+		</if>
+		<if test="adr != null  and  !adr.equals('')">
+			AND CLIENT_ADDR LIKE CONCAT('%',#{adr},'%')
+		</if>
+		<if test="nm != null  and  !nm.equals('')">
+			AND CLIENT_NAME = LIKE CONCAT('%',#{nm},'%')
+		</if> 
+		ORDER BY A.CLIENT_NAME DESC
+	</select>	
+
+	<select id="selectClientStatus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			STATUS AS power,
+			STATUS AS err
+		FROM TB_CLIENT_STATUS
+		WHERE CLIENT_ID = #{id}
+	</select>
+	
+	<select id="selectClientLocationCount" parameterType="clientLocationReqInfoVO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(CLIENT_ID) AS totalCount			
+		FROM TB_CLIENTS		
+		WHERE USE_YN = 'Y'
+		<if test="id != null  and  !id.equals('')">
+			AND CLIENT_ID = #{id}
+		</if>
+		<if test="adr != null  and  !adr.equals('')">
+			AND CLIENT_ADDR LIKE CONCAT('%',#{adr},'%')
+		</if>
+		<if test="nm != null  and  !nm.equals('')">
+			AND CLIENT_NAME = LIKE CONCAT('%',#{nm},'%')
+		</if> 
+	</select>
+	<insert id="insertEmegencyInfo" parameterType="tonghapEventReqInfoVO">
+		INSERT INTO TB_TONGHAP_EVENT (
+			U_SVC_OUTB_ID,
+			STAT_EVET_ID,
+			STAT_EVET_NM,
+			PROC_ST,
+			OUTB_POS_X,
+			OUTB_POS_Y,
+			OUTB_POS_NM,
+			STAT_EVET_CNTN,
+			STAT_EVET_OUTB_DTM,
+			EVET_DURATION
+			
+		) VALUES
+		(
+			#{uSvcOutbId},
+			#{statEvetId},
+			#{statEvetNm},
+			#{procSt},
+			#{outbPosX},
+			#{outbPosY},
+			#{outbPosNm},
+			#{statEvetCntn},
+			#{statEvetOutbDtm},
+			#{evetDuration}
+		)
+	</insert>
+	
+	<select id="selectTonghapEventInfoClient"  parameterType="java.lang.Integer" resultType="java.util.HashMap">
+		SELECT 
+		    ALARM_ID AS alarmId,
+			U_SVC_OUTB_ID AS uSvcOutbId,
+			STAT_EVET_ID AS statEvetId,
+			STAT_EVET_NM AS statEvetNm,
+			PROC_ST AS procSt,
+			OUTB_POS_X AS outbPosX,
+			OUTB_POS_Y AS outbPosY,
+			OUTB_POS_NM AS outbPosNm,
+			STAT_EVET_CNTN AS statEvetCntn,
+			STAT_EVET_OUTB_DTM AS statEvetOutbDtm,
+			EVET_DURATION  AS evetDuration		
+				
+		FROM TB_TONGHAP_EVENT		
+		WHERE PROC_ST = 0	
+		AND ALARM_ID > #{alarmId}
+		ORDER BY STAT_EVET_OUTB_DTM DESC	
+		
+	</select>
+	
+	<select id="selectTonghapEventInfoCMS"  parameterType="baseSearchVO" resultType="java.util.HashMap">
+		SELECT A.* FROM(
+		SELECT 
+		    ALARM_ID AS alarmId,
+			U_SVC_OUTB_ID AS uSvcOutbId,
+			STAT_EVET_ID AS statEvetId,
+			STAT_EVET_NM AS statEvetNm,
+			PROC_ST AS procSt,
+			OUTB_POS_X AS outbPosX,
+			OUTB_POS_Y AS outbPosY,
+			OUTB_POS_NM AS outbPosNm,
+			STAT_EVET_CNTN AS statEvetCntn,
+			STAT_EVET_OUTB_DTM AS statEvetOutbDtm,
+			EVET_DURATION  AS evetDuration		
+				
+		FROM TB_TONGHAP_EVENT		
+		) A
+		<if test="sortingCol != null  and  !sortingCol.equals('')">
+		ORDER BY CONCAT('A.',${sortingCol}) ${sortingType}
+		</if>
+		<if test="sortingCol == null  or  sortingCol.equals('')">
+		ORDER BY A.createDate DESC
+		</if>
+		<if test="startRowNum != null  and  !startRowNum.equals('')">
+		LIMIT #{startRowNum}, #{pageCount}
+		</if>
+		
+	</select>
+	
+	<select id="selectTotalCountTonghapEvent"  parameterType="baseSearchVO" resultType="java.lang.Integer">
+		SELECT 
+		    COUNT(ALARM_ID)	AS count				
+		FROM TB_TONGHAP_EVENT		
+
+	</select>	
+</mapper>
